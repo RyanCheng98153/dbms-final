@@ -1,7 +1,3 @@
----
-title: dbms final
-author: Ryan Cheng, 
----
 # dbms-final
 
 This is a project for librarian database management system.
