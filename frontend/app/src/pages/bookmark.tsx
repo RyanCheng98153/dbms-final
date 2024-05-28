@@ -1,13 +1,15 @@
+// Filename - pages/signup.js
+ 
 import React from "react";
  
-const About = () => {
+const BookMark = () => {
     return (
         <div>
             <h1>
-                This is a book management system
+                BookMark
             </h1>
         </div>
     );
 };
  
-export default About;
+export default BookMark;

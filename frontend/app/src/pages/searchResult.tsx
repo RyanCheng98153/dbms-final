@@ -1,15 +1,13 @@
-// Filename - pages/signup.js
- 
 import React from "react";
  
-const BookList = () => {
+const SearchResult = () => {
     return (
         <div>
             <h1>
-                BookList
+                Searching...
             </h1>
         </div>
     );
 };
  
-export default BookList;
+export default SearchResult;
