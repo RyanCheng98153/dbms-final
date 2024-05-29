@@ -1,7 +1,11 @@
 import React from "react";
  
 const FavoriteList = () => {
-    return <h1>FavoriteList</h1>;
+    return (
+        <h2>
+            show all books~
+        </h2>
+    );
 };
  
 export default FavoriteList;

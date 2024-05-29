@@ -31,9 +31,9 @@ const BookMark = () => {
     return (
         
         <div>
-            <h1>
-                BookMark
-            </h1>
+            <h2>
+                show all books~
+            </h2>
             <ListHeader/>
             <List
             items={testBookmarks}

@@ -3,9 +3,9 @@ import React from "react";
 const SearchResult = () => {
     return (
         <div>
-            <h1>
-                Searching...
-            </h1>
+            <h2>
+                show all books~
+            </h2>
         </div>
     );
 };

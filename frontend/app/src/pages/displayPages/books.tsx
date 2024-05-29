@@ -81,9 +81,9 @@ const testBooks:bookprop[] = [
 const Books = () => {
     return (
         <div>
-            <h1>
+            <h2>
                 show all books~
-            </h1>
+            </h2>
             <ListHeader/>
             <List
               items={testBooks}
