@@ -2,79 +2,29 @@ import React from "react";
 import styled from "styled-components";
 import List from "../components/list";
 
-interface bookprop {
+interface bookmarkprop {
   id:number,
-  isbn:number,
-  title:string,
-  author:string,
-  price:number,
-  category:string,
-  edition:number,
-  curPage:number
+  time_stamp:number, //不知道型別 暫時用number暫定
+  book_id: number,
+  book_page: number,
+  note:string
 }
 
-const testBooks:bookprop[] = [
-  {
-    id: 1,
-    isbn: 9789867412,
-    title: '麥田捕手',
-    author: 'J.D. Salinger',
-    price: 450,
-    category: '文學',
-    edition: 1,
-    curPage: 100
-  },
-  {
-    id: 2,
-    isbn: 9789578626,
-    title: 'R語言生物資訊',
-    author: 'Rstudio Group',
-    price: 320,
-    category: '科學',
-    edition: 2,
-    curPage: 150
-  },
-  {
-    id: 3,
-    isbn: 9789573286,
-    title: '摩訶婆羅多',
-    author: 'Unknown',
-    price: 520,
-    category: '歷史',
-    edition: 3,
-    curPage: 150
-  },
-  {
-    id: 4,
-    isbn: 9789578691,
-    title: '純粹理性批判',
-    author: 'Kant',
-    price: 300,
-    category: '哲學',
-    edition: 1,
-    curPage: 250
-  },
-  {
-    id: 5,
-    isbn: 9789866785,
-    title: '資本論',
-    author: 'K. Marx	',
-    price: 420,
-    category: '社會學',
-    edition: 2,
-    curPage: 300
-  },
-  {
-    id: 6,
-    isbn: 9789573486,
-    title: '傲慢與偏見',
-    author: 'Jane Austen',
-    price: 320,
-    category: '西洋文學',
-    edition: 3,
-    curPage: 320
-  },
-  
+const testBookmarks:bookmarkprop[] = [
+    {
+        id:1,
+        time_stamp:10, //不知道型別 暫時用number暫定
+        book_id: 9789867412,
+        book_page: 50,
+        note:'string'
+    },
+    {
+        id:2,
+        time_stamp:11, //不知道型別 暫時用number暫定
+        book_id: 9789867412,
+        book_page: 75,
+        note:'string'
+    },
 ]
 
 const BookMark = () => {
@@ -84,10 +34,10 @@ const BookMark = () => {
             <h1>
                 BookMark
             </h1>
-            <ListHeader></ListHeader>
+            <ListHeader/>
             <List
-            items={testBooks}
-            renderItem={bookRecord}
+            items={testBookmarks}
+            renderItem={bookmarkRecord}
             />
         </div>
     );
@@ -97,35 +47,19 @@ const BookMark = () => {
 const ListHeader = () => {
     return (
       <HeaderContainer>
-        <Index>{ '.' }</Index>
         <Bookid >{'bookid'}</Bookid>
-        <Bookisbn>{'ISBN'}</Bookisbn>
-        <BookTitle>{'book title'}</BookTitle>
-        <BookAuthor>{'author'}</BookAuthor>
-        <BookPrice>{'price'}</BookPrice>
-        <BookCategory>{'category'}</BookCategory>
-        <BookEdition>{'edition'}</BookEdition>
-        <CurrentPage>{'current page'}</CurrentPage>
       </HeaderContainer>
     )
   }
   
-  const bookRecord = (book:bookprop, index:number) => {
+  const bookmarkRecord = (record:bookmarkprop, index:number) => {
     return (
       <ListItem index={index}>
         <Index>{ index+1 }</Index>
-        <Bookid >{book.id}</Bookid>
-        <Bookisbn>{book.isbn}</Bookisbn>
-        <BookTitle>{book.title}</BookTitle>
-        <BookAuthor>{book.author}</BookAuthor>
-        <BookPrice>{book.price}</BookPrice>
-        <BookCategory>{book.category}</BookCategory>
-        <BookEdition>{'第'+book.edition+'版'}</BookEdition>
-        <CurrentPage>{book.curPage}</CurrentPage>
+        <Bookid >{record.book_id}</Bookid>
       </ListItem>
     );
   }
-  
   
   
   const ListItem = styled.div.attrs<{ index: number }>((props) => {
@@ -136,8 +70,6 @@ const ListHeader = () => {
     display: flex; 
     flex-direction: row;
     padding: 15px 15px; 
-    // margin-top: 5px;
-    // margin-bottom: 5px;
     height: 20;
     border-bottom: 1px solid gray;
     border-width: 3;
@@ -174,34 +106,6 @@ const ListHeader = () => {
   const Bookid = styled.text`
     ${listItemCommon}
     width: 50px; 
-  `
-  const Bookisbn = styled.text`
-    ${listItemCommon}
-    width: 100px; 
-  `
-  const BookTitle = styled.text`
-    ${listItemCommon}
-    width: 120px; 
-  `
-  const BookAuthor = styled.text`
-    ${listItemCommon}
-    width: 70px; 
-  `
-  const BookPrice = styled.text`
-    ${listItemCommon}
-    width: 50px;
-  `
-  const BookCategory = styled.text`
-    ${listItemCommon}
-    width: 80px;
-  `
-  const BookEdition = styled.text`
-    ${listItemCommon}
-    width: 60px;
-  `
-  const CurrentPage = styled.text`
-    ${listItemCommon}
-    width: 100px;
   `
  
 export default BookMark;
