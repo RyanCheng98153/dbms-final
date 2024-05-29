@@ -50,7 +50,10 @@ const Tab = styled.div<{ active: boolean }>`
 `;
 
 const TabContent = styled.div`
-  padding: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 30px;
+  padding-right: 30px;
   border: 1px solid #ccc;
   margin-top: -1px;
   z-index: -1;
