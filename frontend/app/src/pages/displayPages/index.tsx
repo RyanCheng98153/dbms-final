@@ -5,6 +5,7 @@ import Books from "./books";
 import BookList from "./bookmark";
 import ReadingPlan from "./readingPlan";
 import SearchResult from "./searchResult";
+import FavoriteList from "./favorite";
  
 const ResultDisplay = () => {
     return (
@@ -18,6 +19,9 @@ const ResultDisplay = () => {
                 </TabPanel>
                 <TabPanel label="閱讀計畫">
                     <ReadingPlan/>
+                </TabPanel>
+                <TabPanel label="我的最愛">
+                    <FavoriteList/>
                 </TabPanel>
                 <TabPanel label="搜尋結果">
                     <SearchResult/>

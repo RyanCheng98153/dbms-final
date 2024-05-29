@@ -1,5 +1,5 @@
 import React from "react";
-import ResultDisplay from "./pages";
+import ResultDisplay from "./pages/displayPages";
 
 const App: React.FC = () => {
   return (
