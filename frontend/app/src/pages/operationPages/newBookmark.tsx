@@ -4,7 +4,7 @@ const NewBookmark = () => {
     return (
         <div>
             <h2>
-                New a new bookmark
+                New a bookmark
             </h2>
         </div>
     );

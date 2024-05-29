@@ -1,25 +1,30 @@
 import React from "react";
 import Tabs from '../../components/tabs';
 import TabPanel from '../../components/tabpanel';
+import NewBook from "./newbook";
+import NewBookmark from "./newBookmark";
+import NewPlan from "./newPlan";
+import DeleteData from "./deleteData";
+import SearchCategory from "./searchByCategory";
  
 const OperationsPanel = () => {
     return (
         <div>
             <Tabs>
                 <TabPanel label="新增書籍">
-                    <div>new book</div>
+                    <NewBook/>
                 </TabPanel>
                 <TabPanel label="新增閱讀歷史">
-                    <div>new history</div>  
+                    <NewBookmark/>  
                 </TabPanel>
                 <TabPanel label="新增閱讀計畫&更新">
-                    <div>new plan</div>
+                    <NewPlan/>
                 </TabPanel>
                 <TabPanel label="刪除資料">
-                    <div>delete info</div>
+                    <DeleteData/>
                 </TabPanel>
                 <TabPanel label="按分類搜尋">
-                    <div>search</div>
+                    <SearchCategory/>
                 </TabPanel>
             </Tabs>
         </div>

@@ -4,7 +4,7 @@ const NewBook = () => {
     return (
         <div>
             <h2>
-                new a new books
+                new a books
             </h2>
         </div>
     );
