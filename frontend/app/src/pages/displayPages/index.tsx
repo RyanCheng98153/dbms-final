@@ -1,10 +1,10 @@
 import React from "react";
-import Tabs from '../components/tabs';
-import TabPanel from '../components/tabpanel';
-import Books from "../pages/books";
-import BookList from "../pages/bookmark";
-import ReadingPlan from "../pages/readingPlan";
-import SearchResult from "../pages/searchResult";
+import Tabs from '../../components/tabs';
+import TabPanel from '../../components/tabpanel';
+import Books from "./books";
+import BookList from "./bookmark";
+import ReadingPlan from "./readingPlan";
+import SearchResult from "./searchResult";
  
 const ResultDisplay = () => {
     return (

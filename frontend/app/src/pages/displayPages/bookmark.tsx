@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import List from "../components/list";
+import List from "../../components/list";
 
 interface bookmarkprop {
   id:number,
