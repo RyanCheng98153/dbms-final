@@ -56,7 +56,7 @@ const TabContent = styled.div`
   padding-right: 30px;
   border: 1px solid #ccc;
   margin-top: -1px;
-  z-index: -1;
+  //z-index: -1;
 `;
 
 export default Tabs;
