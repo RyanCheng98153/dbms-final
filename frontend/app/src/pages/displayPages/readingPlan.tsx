@@ -6,7 +6,7 @@ const ReadingPlan = () => {
     return (
         <div>
             <h2>
-                show all books~
+                show all plans~
             </h2>
         </div>
     );

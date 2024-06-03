@@ -26,6 +26,7 @@ const ResultDisplay = () => {
                 <TabPanel label="搜尋結果">
                     <SearchResult/>
                 </TabPanel>
+
             </Tabs>
         </div>
     );

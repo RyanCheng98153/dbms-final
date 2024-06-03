@@ -1,4 +1,4 @@
-import React, { useState, ReactElement, ReactNode } from 'react';
+import React, { useState, ReactElement } from 'react';
 import styled from 'styled-components';
 
 interface TabsProps {

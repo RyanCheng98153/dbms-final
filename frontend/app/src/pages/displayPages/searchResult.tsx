@@ -2,7 +2,8 @@ const SearchResult = () => {
     return (
         <div>
             <h2>
-                show all books~
+                search result
+            
             </h2>
         </div>
     );

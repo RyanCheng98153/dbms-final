@@ -6,7 +6,7 @@ interface ListProps<T> {
   }
   
   function List<T>({ items, renderItem }: ListProps<T>): JSX.Element {
-    if(items.length == 0){
+    if(items.length === 0){
         return (
             <NodataContainer>
                 <NodataItem>
