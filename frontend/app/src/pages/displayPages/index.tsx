@@ -6,10 +6,11 @@ import BookList from "./bookmark";
 import ReadingPlan from "./readingPlan";
 import SearchResult from "./searchResult";
 import FavoriteList from "./favorite";
+import styled from "styled-components";
  
 const ResultDisplay = () => {
     return (
-        <div>
+        <PanelContainer>
             <Tabs>
                 <TabPanel label="書籍">
                     <Books/>
@@ -27,8 +28,14 @@ const ResultDisplay = () => {
                     <SearchResult/>
                 </TabPanel>
             </Tabs>
-        </div>
+        </PanelContainer>
     );
 };
  
+
+const PanelContainer = styled.div`
+    //display: flex;
+    padding: 10px;
+`
+
 export default ResultDisplay;

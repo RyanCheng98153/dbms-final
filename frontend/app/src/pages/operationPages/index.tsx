@@ -6,10 +6,11 @@ import NewBookmark from "./newBookmark";
 import NewPlan from "./newPlan";
 import DeleteData from "./deleteData";
 import SearchCategory from "./searchByCategory";
+import styled from "styled-components";
  
 const OperationsPanel = () => {
     return (
-        <div>
+        <PanelContainer>
             <Tabs>
                 <TabPanel label="新增書籍">
                     <NewBook/>
@@ -27,8 +28,13 @@ const OperationsPanel = () => {
                     <SearchCategory/>
                 </TabPanel>
             </Tabs>
-        </div>
+        </PanelContainer>
     );
 };
- 
+
+const PanelContainer = styled.div`
+    //display: flex;
+    padding: 10px;
+`
+
 export default OperationsPanel;
