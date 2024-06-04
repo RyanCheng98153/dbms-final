@@ -1,9 +1,9 @@
-// import { useEffect, useState } from "react";
-// import bookServices from "../../services/book-services";
+import { useEffect, useState } from "react";
+import bookServices from "../../services/book-services";
  
 const FavoriteList = () => {
-    /*
-    const [favbook, setFavbook] = useState<string>('favbook')
+    
+    const [favbook, setFavbook] = useState<string>('init')
     useEffect( () => {
         const fetchData = async () => {
             try {
@@ -19,7 +19,7 @@ const FavoriteList = () => {
         }
         fetchData()
     }, [])
-    */
+    
 
     return (
         <div>
@@ -27,6 +27,10 @@ const FavoriteList = () => {
                 my favorite
             </div>
             
+            <div>
+                {favbook}
+            </div>
+
         </div>
     );
 };

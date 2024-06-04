@@ -9,10 +9,6 @@ const App: React.FC = () => {
       <h1>Book Management System</h1>
       <OperationsPanel/>
       <ResultDisplay/>
-      
-      <button onClick={()=>{alert('pressed')}}>
-          button
-      </button>
     </div>
   );
 };

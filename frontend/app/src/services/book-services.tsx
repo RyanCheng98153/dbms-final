@@ -10,6 +10,7 @@ class BookService {
     async getById(_id: string) {
         return await axios.get(API_URL + `/book/${_id}`)
     }
+    
 }
 
 export default new BookService()
