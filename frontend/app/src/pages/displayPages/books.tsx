@@ -81,7 +81,6 @@ const testBooks:bookprop[] = [
 const Books = () => {
     return (
         <div>
-            show all books~
             <ListHeader/>
             <List
               items={testBooks}
@@ -151,7 +150,7 @@ const HeaderContainer = styled.div`
   margin-bottom: 5px;
   height: 20;
   border-bottom: 1px solid gray;
-  background-color: lightblue;
+  background-color: wheat;
   align-items: center;
   justify-content: space-between;
 `
