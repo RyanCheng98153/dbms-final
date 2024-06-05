@@ -31,7 +31,6 @@ const Tabs: React.FC<TabsProps> = ({ children }) => {
 };
 
 const TabContainer = styled.div`
-  display: flex;
   flex-direction: column;
 `;
 
@@ -44,7 +43,6 @@ const Tab = styled.div<{ active: boolean }>`
   padding: 10px 20px;
   border-bottom: 2px solid ${props => (props.active ? '#000' : '#ccc')};
   border-bottom-color: ${props => (props.active ? '#000' : '#ccc')};
-
   background-color: ${props => (props.active ? 'lightblue' : '#eff')};
   // background-color: lightblue;
 `;

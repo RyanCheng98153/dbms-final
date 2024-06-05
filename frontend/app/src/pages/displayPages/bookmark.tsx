@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import List from "../../components/list";
 
-interface bookmarkprop {
+interface bookmarkProp {
   id:number,
   time_stamp:Date, //不知道型別 暫時用number暫定
   book_id:number,
@@ -10,7 +10,7 @@ interface bookmarkprop {
   note:string
 }
 
-const testBookmarks:bookmarkprop[] = [
+const testBookmarks:bookmarkProp[] = [
     {
         id:1,
         time_stamp: new Date( new Date( "2024-5-31" ).toISOString() ),
@@ -29,7 +29,6 @@ const testBookmarks:bookmarkprop[] = [
 
 const BookMark = () => {
     return (
-        
         <div>
             <ListHeader/>
             <List
@@ -54,7 +53,7 @@ const ListHeader = () => {
   )
 }
   
-const bookmarkRecord = (record:bookmarkprop, index:number) => {
+const bookmarkRecord = (record:bookmarkProp, index:number) => {
   let recordDate = record.time_stamp
   let recordDateString = recordDate.getFullYear() + '/' + recordDate.getMonth() + '/' + recordDate.getDay()
   return (
@@ -101,7 +100,7 @@ const HeaderContainer = styled.div`
 const listItemCommon = `  
   margin-left: 1px;
   margin-right: 1px;
-  //background-color: yellow;
+  // background-color: yellow;
   padding-inline: 1px;
   text-align: right;
 `
@@ -113,23 +112,23 @@ const Index = styled.text`
 `
 const RecordId = styled.text`
   ${listItemCommon}
-  width: 30px; 
+  width: 80px; 
 `
 const RecordTime = styled.text`
   ${listItemCommon}
-  width: 50px; 
+  width: 100px; 
 `
 const BookId = styled.text`
   ${listItemCommon}
-  width: 50px; 
+  width: 110px; 
 `
 const BookmarkPage = styled.text`
   ${listItemCommon}
-  width: 50px; 
+  width: 90px; 
 `
 const BookmarkNote = styled.text`
   ${listItemCommon}
-  width: 100px; 
+  width: 250px; 
 `
 
  

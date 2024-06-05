@@ -2,7 +2,7 @@ import React from "react";
 import List from "../../components/list";
 import styled from "styled-components";
 
-interface bookprop {
+interface bookProp {
   id:number,
   isbn:number,
   title:string,
@@ -13,7 +13,7 @@ interface bookprop {
   curPage:number
 }
 
-const testBooks:bookprop[] = [
+const testBooks:bookProp[] = [
   {
     id: 1,
     isbn: 9789867412,
@@ -106,7 +106,7 @@ const ListHeader = () => {
   )
 }
 
-const bookRecord = (book:bookprop, index:number) => {
+const bookRecord = (book:bookProp, index:number) => {
   return (
     <ListItem index={index}>
       <Index>{ index+1 }</Index>
