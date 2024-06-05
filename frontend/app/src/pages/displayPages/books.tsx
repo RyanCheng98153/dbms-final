@@ -94,8 +94,8 @@ const ListHeader = () => {
   return (
     <HeaderContainer>
       <Index>{ '.' }</Index>
-      <Bookid >{'bookid'}</Bookid>
-      <Bookisbn>{'ISBN'}</Bookisbn>
+      <BookId >{'bookid'}</BookId>
+      <BookIsbn>{'ISBN'}</BookIsbn>
       <BookTitle>{'book title'}</BookTitle>
       <BookAuthor>{'author'}</BookAuthor>
       <BookPrice>{'price'}</BookPrice>
@@ -110,8 +110,8 @@ const bookRecord = (book:bookprop, index:number) => {
   return (
     <ListItem index={index}>
       <Index>{ index+1 }</Index>
-      <Bookid >{book.id}</Bookid>
-      <Bookisbn>{book.isbn}</Bookisbn>
+      <BookId >{book.id}</BookId>
+      <BookIsbn>{book.isbn}</BookIsbn>
       <BookTitle>{book.title}</BookTitle>
       <BookAuthor>{book.author}</BookAuthor>
       <BookPrice>{book.price}</BookPrice>
@@ -132,8 +132,6 @@ const ListItem = styled.div.attrs<{ index: number }>((props) => {
   display: flex; 
   flex-direction: row;
   padding: 15px 15px; 
-  // margin-top: 5px;
-  // margin-bottom: 5px;
   height: 20;
   border-bottom: 1px solid gray;
   border-width: 3;
@@ -150,7 +148,7 @@ const HeaderContainer = styled.div`
   margin-bottom: 5px;
   height: 20;
   border-bottom: 1px solid gray;
-  background-color: lightblue;
+  background-color: wheat;
   align-items: center;
   justify-content: space-between;
 `
@@ -167,11 +165,11 @@ const Index = styled.text`
   text-align: left;
   width: 20px; 
 `
-const Bookid = styled.text`
+const BookId = styled.text`
   ${listItemCommon}
   width: 50px; 
 `
-const Bookisbn = styled.text`
+const BookIsbn = styled.text`
   ${listItemCommon}
   width: 100px; 
 `
