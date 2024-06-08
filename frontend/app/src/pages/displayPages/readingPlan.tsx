@@ -43,7 +43,7 @@ const ListHeader = () => {
         <Index>{'.'}</Index>
         <PlanId>{'record_No'}</PlanId>
         <BookId>{'book_id'}</BookId>
-        <ExpiredDate>{'bookpage'}</ExpiredDate>
+        <ExpiredDate>{'Expried_date'}</ExpiredDate>
         <IsComplete>{'is_complete'}</IsComplete>
       </HeaderContainer>
     )
@@ -109,19 +109,19 @@ const Index = styled.text`
 `
 const PlanId = styled.text`
   ${listItemCommon}
-  width: 70px; 
+  width: 80px; 
 `
 const BookId = styled.text`
 ${listItemCommon}
-width: 150px; 
+width: 110px; 
 `
 const ExpiredDate = styled.text`
 ${listItemCommon}
-width: 180px; 
+width: 140px; 
 `
 const IsComplete = styled.text`
 ${listItemCommon}
-width: 200px; 
+width: 120px; 
 `
 
 
