@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import List from "../../components/list";
 
-interface bookmarkProp {
+interface BookHistoryProp {
   id:number,
   time_stamp:Date, //不知道型別 暫時用number暫定
   book_id:number,
@@ -10,7 +10,7 @@ interface bookmarkProp {
   note:string
 }
 
-const testBookmarks:bookmarkProp[] = [
+const testHistory:BookHistoryProp[] = [
     {
         id:1,
         time_stamp: new Date( new Date( "2024-5-31" ).toISOString() ),
@@ -27,13 +27,13 @@ const testBookmarks:bookmarkProp[] = [
     },
 ]
 
-const BookMark = () => {
+const BookHistory = () => {
     return (
         <div>
             <ListHeader/>
             <List
-              items={testBookmarks}
-              renderItem={bookmarkRecord}
+              items={testHistory}
+              renderItem={BookHistoryItem}
             />
         </div>
     );
@@ -47,13 +47,13 @@ const ListHeader = () => {
       <RecordId>{'record_No'}</RecordId>
       <RecordTime>{'time_stamp'}</RecordTime>
       <BookId>{'book_id'}</BookId>
-      <BookmarkPage>{'bookpage'}</BookmarkPage>
-      <BookmarkNote>{'note'}</BookmarkNote>
+      <BookPage>{'bookpage'}</BookPage>
+      <PageNote>{'note'}</PageNote>
     </HeaderContainer>
   )
 }
   
-const bookmarkRecord = (record:bookmarkProp, index:number) => {
+const BookHistoryItem = (record:BookHistoryProp, index:number) => {
   let recordDate = record.time_stamp
   let recordDateString = recordDate.getFullYear() + '/' + recordDate.getMonth() + '/' + recordDate.getDay()
   return (
@@ -62,8 +62,8 @@ const bookmarkRecord = (record:bookmarkProp, index:number) => {
       <RecordId>{record.id}</RecordId>
       <RecordTime>{recordDateString}</RecordTime>
       <BookId>{record.book_id}</BookId>
-      <BookmarkPage>{record.book_page}</BookmarkPage>
-      <BookmarkNote>{record.note}</BookmarkNote>
+      <BookPage>{record.book_page}</BookPage>
+      <PageNote>{record.note}</PageNote>
     </ListItem>
   );
 }
@@ -122,14 +122,14 @@ const BookId = styled.text`
   ${listItemCommon}
   width: 110px; 
 `
-const BookmarkPage = styled.text`
+const BookPage = styled.text`
   ${listItemCommon}
   width: 90px; 
 `
-const BookmarkNote = styled.text`
+const PageNote = styled.text`
   ${listItemCommon}
   width: 250px; 
 `
 
  
-export default BookMark;
+export default BookHistory;

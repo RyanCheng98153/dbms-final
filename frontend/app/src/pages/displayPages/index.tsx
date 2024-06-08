@@ -2,7 +2,7 @@ import React from "react";
 import Tabs from '../../components/tabs';
 import TabPanel from '../../components/tabpanel';
 import Books from "./books";
-import BookList from "./bookmark";
+import BookHistory from "./bookhistory";
 import ReadingPlan from "./readingPlan";
 import SearchResult from "./searchResult";
 import FavoriteList from "./favorite";
@@ -16,7 +16,7 @@ const ResultDisplay = () => {
                     <Books/>
                 </TabPanel>
                 <TabPanel label="閱讀歷史">
-                    <BookList/>  
+                    <BookHistory/>  
                 </TabPanel>
                 <TabPanel label="閱讀計畫">
                     <ReadingPlan/>
