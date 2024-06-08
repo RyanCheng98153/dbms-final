@@ -35,48 +35,7 @@ const testBooks:bookProp[] = [
     category: '科學',
     edition: 2,
     current_page: 150
-  },
-  {
-    id: 3,
-    isbn: 9789573286,
-    title: '摩訶婆羅多',
-    author: 'Unknown',
-    price: 520,
-    category: '歷史',
-    edition: 3,
-    current_page: 150
-  },
-  {
-    id: 4,
-    isbn: 9789578691,
-    title: '純粹理性批判',
-    author: 'Kant',
-    price: 300,
-    category: '哲學',
-    edition: 1,
-    current_page: 250
-  },
-  {
-    id: 5,
-    isbn: 9789866785,
-    title: '資本論',
-    author: 'K. Marx	',
-    price: 420,
-    category: '社會學',
-    edition: 2,
-    current_page: 300
-  },
-  {
-    id: 6,
-    isbn: 9789573486,
-    title: '傲慢與偏見',
-    author: 'Jane Austen',
-    price: 320,
-    category: '西洋文學',
-    edition: 3,
-    current_page: 320
-  },
-  
+  }
 ]
 
 interface IBook{
@@ -91,7 +50,7 @@ interface IBook{
 }
 
 const Books = () => {
-  const [press, setPress] = useState<boolean>(false)
+  // const [press, setPress] = useState<boolean>(false)
   const [books, setBooks] = useState<bookProp[]>([
     {
       id: 0,
@@ -111,20 +70,18 @@ const Books = () => {
         // console.log('fetched')
         const response = await bookServices.getBooks()
         if(!response) {console.log('no data in response'); return;}
-        // console.log('response book')
-        // console.log(response.data[0])
 
         const responseBooks:bookProp[] = response.data.map(
-          ( book:IBook ) => {
+          ( item:IBook ) => {
             return {
-              id: book.id,
-              isbn: book.ISBN,
-              title: book.book_title,
-              author: book.author,
-              price: book.price,
-              category: book.category,
-              edition: book.edition,
-              current_page: book.current_page
+              id: item.id,
+              isbn: item.ISBN,
+              title: item.book_title,
+              author: item.author,
+              price: item.price,
+              category: item.category,
+              edition: item.edition,
+              current_page: item.current_page
             }
           }
         )
@@ -154,7 +111,7 @@ const ListHeader = () => {
   return (
     <HeaderContainer>
       <Index>{ '.' }</Index>
-      {/*<BookId >{'id'}</BookId>*/}
+      {<BookId >{'id'}</BookId>}
       <BookIsbn>{'ISBN'}</BookIsbn>
       <BookTitle>{'book title'}</BookTitle>
       <BookAuthor>{'author'}</BookAuthor>
@@ -170,7 +127,7 @@ const bookRecord = (book:bookProp, index:number) => {
   return (
     <ListItem index={index}>
       <Index>{ index+1 }</Index>
-      {/*<BookId >{book.id}</BookId>*/}
+      {<BookId >{book.id}</BookId>}
       <BookIsbn>{book.isbn}</BookIsbn>
       <BookTitle>{book.title}</BookTitle>
       <BookAuthor>{book.author}</BookAuthor>
@@ -234,7 +191,7 @@ const BookId = styled.text`
 `
 const BookIsbn = styled.text`
   ${listItemCommon}
-  width: 110px; 
+  width: 120px; 
 `
 const BookTitle = styled.text`
   ${listItemCommon}

@@ -2,30 +2,29 @@ import axios from 'axios';
 
 const API_URL = 'http://127.0.0.1:5000'
 
-class BookService {
-    /*
-    interface IBook{
-        id: number
-        ISBN: string,
-        book_title: string,
-        author: number,
-        price: number,
-        category: number,
-        edition: number,
-        current_page: number,
+class HistoryService {
+    /*    
+    interface IHistory{
+        id: number,
+        time_stamp: Date,
+        book_id: number,
+        bookpage: number,
+        note: string
     }
     */
-
-    async getBooks() {
-        return await axios.get(API_URL + '/view_data/books')
+    
+    async getHistory() {
+        return await axios.get(API_URL + '/view_data/history')
     }
+
     /*
     async getById(_id: string) {
         return await axios.get(API_URL + `/book/${_id}`)
     }
     */ 
 
-    async addBooks(
+    /*
+    async addHistory(
         //jwt_token: string,
         ISBN: string,
         book_title: string,
@@ -36,7 +35,7 @@ class BookService {
         current_page: number,
       ) {
         return axios.post(
-          API_URL + '/add_book',
+          API_URL + '/add_history',
           {
             ISBN: ISBN,
             book_title: book_title,
@@ -49,8 +48,9 @@ class BookService {
           //{ headers: { Authorization: `Bearer ${jwt_token}` },}
         )
       }
+    */
 
     
 }
 
-export default new BookService()
+export default new HistoryService()

@@ -1,16 +1,18 @@
 import React from "react";
 import styled from "styled-components";
 import List from "../../components/list";
+import { useState, useEffect } from "react";
+import historyServices from "../../services/history-services";
 
-interface BookHistoryProp {
+interface bookHistoryProp {
   id:number,
-  time_stamp:Date, //不知道型別 暫時用number暫定
+  time_stamp:Date, 
   book_id:number,
   book_page:number,
   note:string
 }
 
-const testHistory:BookHistoryProp[] = [
+const testHistory:bookHistoryProp[] = [
     {
         id:1,
         time_stamp: new Date( new Date( "2024-5-31" ).toISOString() ),
@@ -27,18 +29,66 @@ const testHistory:BookHistoryProp[] = [
     },
 ]
 
+interface IHistory{
+    id: number,
+    time_stamp: Date,
+    book_id: number,
+    bookpage: number,
+    note: string
+}
+
 const BookHistory = () => {
+    // const [press, setPress] = useState<boolean>(false)
+    const [history, setHstory] = useState<bookHistoryProp[]>([
+        {
+            id:0,
+            time_stamp: new Date(),
+            book_id:100000000,
+            book_page:0,
+            note:"history test"
+        }
+      ])
+
+      React.useEffect( () => {
+        const fetchData = async () => {
+          try {
+            // console.log('fetched')
+            const response = await historyServices.getHistory()
+            if(!response) {console.log('no data in response'); return;}
+            // console.log('response')
+            // console.log(response.data[0])
+            
+            const responseHistory:bookHistoryProp[] = response.data.map(
+              ( item:IHistory ) => {
+                return {
+                    id: item.id,
+                    time_stamp: new Date(item.time_stamp),
+                    book_id: item.book_id,
+                    book_page: item.bookpage,
+                    note: item.note,
+                }
+              }
+            )
+            
+            setHstory(responseHistory)
+          } catch (error) {
+            console.error('An error occurred while fetching data:', error )
+          }
+        }
+        fetchData()
+      }, [])
+
     return (
         <div>
             <ListHeader/>
             <List
-              items={testHistory}
+              // items={testHistory}
+              items={history}
               renderItem={BookHistoryItem}
             />
         </div>
     );
 };
-
 
 const ListHeader = () => {
   return (
@@ -53,7 +103,7 @@ const ListHeader = () => {
   )
 }
   
-const BookHistoryItem = (record:BookHistoryProp, index:number) => {
+const BookHistoryItem = (record:bookHistoryProp, index:number) => {
   let recordDate = record.time_stamp
   let recordDateString = recordDate.getFullYear() + '/' + recordDate.getMonth() + '/' + recordDate.getDay()
   return (
