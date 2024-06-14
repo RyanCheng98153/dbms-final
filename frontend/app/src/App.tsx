@@ -22,7 +22,6 @@ const Container = styled.div`
     flex-direction: row; // Change flex-direction to row when the width is over 600px
     gap: 20px; // Increase space between items
   }
-
 `
 
 export default App;

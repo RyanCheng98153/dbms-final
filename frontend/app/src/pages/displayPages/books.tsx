@@ -1,4 +1,3 @@
-import React from "react";
 import List from "../../components/list";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
@@ -64,13 +63,12 @@ const Books = () => {
     }
   ])
   
-  React.useEffect( () => {
+  useEffect( () => {
     const fetchData = async () => {
       try {
         // console.log('fetched')
         const response = await bookServices.getBooks()
         if(!response) {console.log('no data in response'); return;}
-
         const responseBooks:bookProp[] = response.data.map(
           ( item:IBook ) => {
             return {
@@ -139,8 +137,6 @@ const bookRecord = (book:bookProp, index:number) => {
     </ListItem>
   );
 }
-
-
 
 const ListItem = styled.div.attrs<{ index: number }>((props) => {
   return {
