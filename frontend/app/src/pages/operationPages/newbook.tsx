@@ -11,7 +11,7 @@ interface Book {
     current_page: number;
 }
 
-const initialBookState = { //輸入框預設是空的
+const initialBookState = {
     isbn: '',
     title: '',
     author: '',
@@ -46,109 +46,153 @@ const NewBook = () => {
     };
 
     return (
-        <div>
-            
-            <Container>
-                <input name="isbn" value={book.isbn} onChange={handleInputChange} placeholder="ISBN" />  {/*placehoder代表提醒邊要輸入甚麼，是透明的字*/}
-            </Container>
-            <Container>
-                <input name="title" value={book.title} onChange={handleInputChange} placeholder="Book Title" />
-            </Container>
-            <Container>
-                <input name="author" value={book.author} onChange={handleInputChange} placeholder="Author" />
-            </Container>
-            <Container>
-                <input name="price" value={book.price} onChange={handleInputChange} placeholder="Price" />
-            </Container>
-            <Container>
-                <input name="category" value={book.category} onChange={handleInputChange} placeholder="Category" />
-            </Container>
-            <Container>
-                <input name="edition" value={book.edition} onChange={handleInputChange} placeholder="Edition" />
-            </Container>
-            <Container>
-                <input name="current_page" value={book.current_page} onChange={handleInputChange} placeholder="Current Page" />
-            </Container>
-            
-            
-            
-            <button onClick={handleBtnClick}>提交</button>
-            <ul>
+        <Container>
+            <Title>新增書籍</Title>
+            <Label>ISBN</Label>
+            <Input
+                name="isbn"
+                value={book.isbn}
+                onChange={handleInputChange}
+                placeholder="ISBN"
+            />
+            <Label>書名</Label>
+            <Input
+                name="title"
+                value={book.title}
+                onChange={handleInputChange}
+                placeholder="書名"
+            />
+            <Label>作者</Label>
+            <Input
+                name="author"
+                value={book.author}
+                onChange={handleInputChange}
+                placeholder="作者"
+            />
+            <Label>價格</Label>
+            <Input
+                name="price"
+                value={book.price}
+                onChange={handleInputChange}
+                placeholder="價格"
+            />
+            <Label>類別</Label>
+            <Input
+                name="category"
+                value={book.category}
+                onChange={handleInputChange}
+                placeholder="類別"
+            />
+            <Label>版次</Label>
+            <Input
+                name="edition"
+                value={book.edition}
+                onChange={handleInputChange}
+                placeholder="版次"
+            />
+            <Label>已讀頁數</Label>
+            <Input
+                name="current_page"
+                value={book.current_page}
+                onChange={handleInputChange}
+                placeholder="已讀頁數"
+            />
+            <Button onClick={handleBtnClick}>提交</Button>
+            <BookList>
                 {bookList.map((book, index) => (
-                    <li key={index}>
-                        {`ISBN: ${book.isbn}, Title: ${book.title}, Author: ${book.author}, Price: ${book.price}, Category: ${book.category}, Edition: ${book.edition}, Current Page: ${book.current_page}`}
-                    </li>
+                    <BookItem key={index}>
+                        {`ISBN: ${book.isbn}, 書名: ${book.title}, 作者: ${book.author}, 價格: ${book.price}, 類別: ${book.category}, 版次: ${book.edition}, 已讀頁數: ${book.current_page}`}
+                    </BookItem>
                 ))}
-            </ul>
-        </div>
+            </BookList>
+        </Container>
     );
 };
 
-export default NewBook;
 
 const Container = styled.div`
-    background-color: lightblue;
-`
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 40px;
+    border-radius: 20px;
+    background: #e0fbd8; /* 淺灰色背景 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+    color: #333;
+`;
 
 
+const Title = styled.h2`
+    margin-bottom: 30px;
+    color: #333;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+`;
 
-{/*import React, { useState } from "react";
+const Label = styled.label`
+    display: block;
+    font-weight: bold;
+    margin: 15px 0 5px;
+    color: #555;
+`;
 
+const Input = styled.input`
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 
-interface Book {
-    isbn:number,
-    title:string,
-    author:string,
-    price:number,
-    category:string,
-    edition:number,
-    current_page:number
-}
+    &:focus {
+        border-color: #007BFF;
+        box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+        outline: none;
+    }
+`;
+const Button = styled.button`
+    width: 100%;
+    padding: 15px;
+    margin-top: 20px;
+    background: linear-gradient(90deg, #ff7e5f, #feb47b);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
 
-const initialBookState: Book = {
-    isbn: 0,
-    title: "",
-    author: "",
-    price: 0,
-    category: "",
-    edition: 0,
-    current_page: 0,
-};
+    &:hover {
+        background: linear-gradient(90deg, #feb47b, #ff7e5f);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
 
-const NewBook = () => {
-    const [book, setBook] = useState<Book>(initialBookState);
-    const [bookList, setBookList] = useState<Book[]>([]);
+    &:active {
+        transform: translateY(0);
+    }
+`;
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setBook({ ...book, [name]: value });
-    };
+const BookList = styled.ul`
+    list-style-type: none;
+    padding: 0;
+    margin-top: 20px;
+`;
 
-    const handleBtnClick = () => {
-        setBookList([...bookList, book]);
-        setBook(initialBookState);  // 清空输入框
-    };
+const BookItem = styled.li`
+    background-color: #fff;
+    margin: 10px 0;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 
-    return (
-        <div>
-            <input name="isbn" value={book.isbn} onChange={handleInputChange} placeholder="ISBN" />
-            <input name="title" value={book.title} onChange={handleInputChange} placeholder="Book Title" />
-            <input name="author" value={book.author} onChange={handleInputChange} placeholder="Author" />
-            <input name="price" value={book.price} onChange={handleInputChange} placeholder="Price" />
-            <input name="category" value={book.category} onChange={handleInputChange} placeholder="Category" />
-            <input name="edition" value={book.edition} onChange={handleInputChange} placeholder="Edition" />
-            <input name="current_page" value={book.current_page} onChange={handleInputChange} placeholder="Current Page" />
-            <button onClick={handleBtnClick}>提交</button>
-            <ul>
-                {bookList.map((book, index) => (
-                    <li key={index}>
-                        {`ISBN: ${book.isbn}, Title: ${book.title}, Author: ${book.author}, Price: ${book.price}, Category: ${book.category}, Edition: ${book.edition}, Current Page: ${book.current_page}`}
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
-};
+    &:hover {
+        background-color: #f1f1f1;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+`;
 
 export default NewBook;
-*/}

@@ -6,7 +6,7 @@ import styled from "styled-components";
 const App: React.FC = () => {
   return (
     <div>
-      <h1>Book Management System</h1>
+      {/*<h1>Book Management System</h1>*/}
       <Container>  
         <OperationsPanel/>
         <ResultDisplay/>
