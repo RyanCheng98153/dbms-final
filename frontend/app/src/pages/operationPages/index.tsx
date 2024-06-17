@@ -2,7 +2,7 @@ import React from "react";
 import Tabs from '../../components/tabs';
 import TabPanel from '../../components/tabpanel';
 import NewBook from "./newbook";
-import NewBookmark from "./newBookmark";
+import NewBookmark from "./newBookHistory";
 import NewPlan from "./newPlan";
 import DeleteData from "./deleteData";
 import SearchCategory from "./searchByCategory";

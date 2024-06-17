@@ -18,8 +18,10 @@ const App: React.FC = () => {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
+  max-width: 1500px; // Set max-width for the container
+
   @media (min-width: 1200px) {
-    flex-direction: row; // Change flex-direction to row when the width is over 600px
+    flex-direction: row; // Change flex-direction to row when the width is over 1200px
     gap: 20px; // Increase space between items
   }
 `

@@ -113,9 +113,12 @@ const NewBook = () => {
 const Container = styled.div`
     max-width: 600px;
     margin: 50px auto;
+    margin-top: 40px;
+    margin-bottom: 20px;
     padding: 40px;
+    padding-top: 20px;
     border-radius: 20px;
-    background: #e0fbd8; /* 淺灰色背景 */
+    background: #f0f0e0; /* 淺灰色背景 */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     font-family: 'Arial', sans-serif;
     color: #333;
