@@ -17,13 +17,13 @@ class HistoryService {
         return await axios.get(API_URL + '/view_data/history')
     }
 
-    /*
+    
     async getById(_id: string) {
         return await axios.get(API_URL + `/book/${_id}`)
     }
-    */ 
+    
 
-    /*
+    
     async addHistory(
         //jwt_token: string,
         ISBN: string,
@@ -48,7 +48,11 @@ class HistoryService {
           //{ headers: { Authorization: `Bearer ${jwt_token}` },}
         )
       }
-    */
+      async deleteHistory(bookId: string) {
+        // 進行 HTTP DELETE 請求來刪除特定書籍
+        return axios.delete(API_URL + `/delete_book/${bookId}`);
+    }
+    
 
     
 }
