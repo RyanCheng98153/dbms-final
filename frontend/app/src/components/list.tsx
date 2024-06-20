@@ -29,8 +29,6 @@ const ListContainer = styled.div`
 `;
 
 const ListItem = styled.div`
-  border-bottom: 1px solid gray;
-  padding: 10px 15px;
 `;
 
 const NodataContainer = styled.div`
