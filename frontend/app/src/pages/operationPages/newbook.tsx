@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-
+import bookServices from "../../services/book-services";
 interface Book {
     isbn: number;
     title: string;
@@ -24,15 +24,16 @@ const initialBookState = {
 const NewBook = () => {
     const [book, setBook] = useState(initialBookState);
     const [bookList, setBookList] = useState<Book[]>([]);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {//每次輸入都會調用一次handleInputChange
-        const { name, value } = e.target;  //name代表isbn或title那些... value代表輸入的值
-        setBook({ ...book, [name]: value }); //將結果傳到"book"中，送出時就可以送book的資訊出去
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setBook({ ...book, [name]: value });
     };
 
-    const handleBtnClick = () => {
+    const handleBtnClick = async () => {
         const newBook: Book = {
-            isbn: parseInt(book.isbn),  //字串轉成int
+            isbn: parseInt(book.isbn),
             title: book.title,
             author: book.author,
             price: parseFloat(book.price),
@@ -41,13 +42,32 @@ const NewBook = () => {
             current_page: parseInt(book.current_page),
         };
 
-        setBookList([...bookList, newBook]); //將原先的booklist新增一個newBook
-        setBook(initialBookState);  // 清空輸入
+        try {
+            // 呼叫 BookService 的 addBooks 方法
+            await bookServices.addBooks(
+                newBook.isbn.toString(),
+                newBook.title,
+                parseInt(newBook.author),
+                newBook.price,
+                parseInt(newBook.category),
+                newBook.edition,
+                newBook.current_page
+            );
+
+            // 將新書籍添加到本地的書籍列表
+            setBookList([...bookList, newBook]);
+            setBook(initialBookState);  // 清空輸入
+            setErrorMessage(null);  // 清除錯誤訊息
+        } catch (error) {
+            // 處理錯誤
+            setErrorMessage("新增書籍失敗，請稍後再試");
+        }
     };
 
     return (
         <Container>
             <Title>新增書籍</Title>
+            {errorMessage && <Error>{errorMessage}</Error>}
             <Label>ISBN</Label>
             <Input
                 name="isbn"
@@ -196,6 +216,12 @@ const BookItem = styled.li`
         background-color: #f1f1f1;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
+`;
+
+const Error = styled.div`
+    color: red;
+    margin-bottom: 20px;
+    text-align: center;
 `;
 
 export default NewBook;
