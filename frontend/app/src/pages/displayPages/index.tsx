@@ -2,7 +2,7 @@ import React from "react";
 import Tabs from '../../components/tabs';
 import TabPanel from '../../components/tabpanel';
 import Books from "./books";
-import BookHistory from "./bookHistory";
+import BookHistory from "./bookhistory";
 import ReadingPlan from "./readingPlan";
 import SearchResult from "./searchResult";
 import FavoriteList from "./favorite";
