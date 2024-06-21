@@ -50,9 +50,17 @@ class BookService {
     )
   }
   // 新增刪除書籍的方法
-  async deleteBook(bookId: string) {
+  async deleteBook(
+    bookId: string
+  ) {
     // 進行 HTTP DELETE 請求來刪除特定書籍
-    return axios.delete(API_URL + `/delete_book/${bookId}`);
+    return axios.delete(
+      API_URL + `/delete_data`,{
+        data:{
+          table: '書籍',
+          id: bookId
+        }
+      })
   }
 
 }
