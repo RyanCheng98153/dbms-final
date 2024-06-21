@@ -29,9 +29,9 @@ class BookService {
     //jwt_token: string,
     ISBN: string,
     book_title: string,
-    author: number,
+    author: string,
     price: number,
-    category: number,
+    category: string,
     edition: number,
     current_page: number,
   ) {
