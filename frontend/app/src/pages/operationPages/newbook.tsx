@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import bookServices from "../../services/book-services";
+
 interface Book {
     isbn: number;
     title: string;
@@ -11,19 +12,40 @@ interface Book {
     current_page: number;
 }
 
+interface ServiceBook {
+    //jwt_token: string,
+    ISBN: string;
+    book_title: string;
+    author: string;
+    price: number;
+    category: string;
+    edition: number;
+    current_page: number;
+}
+
+const testBookState = {
+    isbn: 1000000000,
+    title: 'testing',
+    author: 'test',
+    price: 0,
+    category: 'test',
+    edition: 1,
+    current_page: 0,
+};
+
 const initialBookState = {
-    isbn: '',
+    isbn: 0,
     title: '',
     author: '',
-    price: '',
+    price: 0,
     category: '',
-    edition: '',
-    current_page: '',
+    edition: 0,
+    current_page: 0,
 };
 
 const NewBook = () => {
-    const [book, setBook] = useState(initialBookState);
-    const [bookList, setBookList] = useState<Book[]>([]);
+    const [book, setBook] = useState<Book>(initialBookState);
+    //const [bookList, setBookList] = useState<Book[]>([]);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,34 +55,50 @@ const NewBook = () => {
 
     const handleBtnClick = async () => {
         const newBook: Book = {
-            isbn: parseInt(book.isbn),
+            isbn: book.isbn,
             title: book.title,
             author: book.author,
-            price: parseFloat(book.price),
+            price: book.price,
             category: book.category,
-            edition: parseInt(book.edition),
-            current_page: parseInt(book.current_page),
+            edition: book.edition,
+            current_page: book.current_page,
         };
 
         try {
+            console.log('add book')
+            
+            if( newBook.isbn < 1000000000 ||
+                newBook.title == '' ||
+                newBook.edition < 0 ||
+                newBook.current_page < 0
+                // newBook.author == '' 
+            ){
+                throw("invalid input")
+            }
+            
             // 呼叫 BookService 的 addBooks 方法
             await bookServices.addBooks(
                 newBook.isbn.toString(),
                 newBook.title,
-                parseInt(newBook.author),
+                newBook.author,
                 newBook.price,
-                parseInt(newBook.category),
+                newBook.category,
                 newBook.edition,
                 newBook.current_page
             );
 
             // 將新書籍添加到本地的書籍列表
-            setBookList([...bookList, newBook]);
+            //setBookList([...bookList, newBook]);
             setBook(initialBookState);  // 清空輸入
             setErrorMessage(null);  // 清除錯誤訊息
         } catch (error) {
             // 處理錯誤
-            setErrorMessage("新增書籍失敗，請稍後再試");
+            if(error == "invalid input"){
+                setErrorMessage("請正確的輸入書籍資訊")
+            }
+            else{
+                setErrorMessage("新增書籍失敗，請稍後再試");
+            }
         }
     };
 
@@ -71,6 +109,8 @@ const NewBook = () => {
             <Label>ISBN</Label>
             <Input
                 name="isbn"
+                type="number"
+                min="0"
                 value={book.isbn}
                 onChange={handleInputChange}
                 placeholder="ISBN"
@@ -118,13 +158,14 @@ const NewBook = () => {
                 placeholder="已讀頁數"
             />
             <Button onClick={handleBtnClick}>提交</Button>
+            {/*
             <BookList>
                 {bookList.map((book, index) => (
                     <BookItem key={index}>
                         {`ISBN: ${book.isbn}, 書名: ${book.title}, 作者: ${book.author}, 價格: ${book.price}, 類別: ${book.category}, 版次: ${book.edition}, 已讀頁數: ${book.current_page}`}
                     </BookItem>
                 ))}
-            </BookList>
+            </BookList>*/}
         </Container>
     );
 };
