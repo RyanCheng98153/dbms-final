@@ -1,6 +1,8 @@
 import styled from "styled-components"
 import List from "../../components/list"
 import { isDocument } from "@testing-library/user-event/dist/utils";
+import { useState, useEffect } from "react";
+import ReadingPlanService from "../../services/reading-plan-services";
 
 interface planProp {
     id:number,
@@ -8,7 +10,7 @@ interface planProp {
     expired_date:Date,
     is_complete:boolean
   }
-  
+  /*
 const testPlan:planProp[] = [
     {
         id:1,
@@ -35,6 +37,37 @@ const ReadingPlan = () => {
         </div>
     );
 };
+*/
+const ReadingPlan = () => {
+  const [plans, setPlans] = useState<planProp[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await ReadingPlanService.getPlans();
+        if (response && response.data) {
+          const responsePlans: planProp[] = response.data.map((item: any) => ({
+            id: item.id,
+            book_id: item.book_id,
+            expired_date: new Date(item.expired_date).toLocaleDateString(),
+            is_complete: item.is_complete
+          }));
+          setPlans(responsePlans);
+        }
+      } catch (error) {
+        console.error('An error occurred while fetching data:', error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  return (
+    <div>
+      <ListHeader />
+      <List items={plans} renderItem={PlanRecord} />
+    </div>
+  );
+};
 
 
 const ListHeader = () => {
@@ -46,12 +79,13 @@ const ListHeader = () => {
         <ExpiredDate>{'Expried_date'}</ExpiredDate>
         <IsComplete>{'is_complete'}</IsComplete>
       </HeaderContainer>
-    )
-  }
+    );
+  };
 
    
 const PlanRecord = (record:planProp, index:number) => {
-    let recordDate = record.expired_date
+    // 確保 record.expired_date 是一個 Date 對象
+    let recordDate = new Date(record.expired_date);
     let recordDateString:string = recordDate.getFullYear() + '/' + recordDate.getMonth() + '/' + recordDate.getDay()
     let isCompleteString:string = record.is_complete ? 'True' : 'False' 
     return (

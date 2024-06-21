@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import styled from "styled-components";
 import "react-datepicker/dist/react-datepicker.css";
+import ReadingPlanService from "../../services/reading-plan-services";
 
 interface Plan {
     bookId: number;
@@ -33,15 +34,24 @@ const NewPlan = () => {
         setPlan({ ...plan, date }); 
     };
 
-    const handlePlanSubmit = () => {
+    const handlePlanSubmit = async () => {
         const newPlan: Plan = {
             bookId: parseInt(plan.bookId),
             date: plan.date,
             finished: plan.finished,
         };
 
-        setPlanList([...planList, newPlan]);
-        setPlan(initialPlanState);
+        try {
+            await ReadingPlanService.addPlan({
+                book_id: newPlan.bookId,
+                expired_date: newPlan.date.toISOString(),
+                is_complete: newPlan.finished,
+            });
+            setPlanList([...planList, newPlan]);
+            setPlan(initialPlanState);
+            } catch (error) {
+            console.error("An error occurred while adding the plan:", error);
+            }        
     };
 
     return (

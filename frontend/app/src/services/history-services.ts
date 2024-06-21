@@ -1,60 +1,42 @@
 import axios from 'axios';
 
-const API_URL = 'http://127.0.0.1:5000'
+const API_URL = 'http://127.0.0.1:5000';
 
 class HistoryService {
-    /*    
-    interface IHistory{
-        id: number,
-        time_stamp: Date,
-        book_id: number,
-        bookpage: number,
-        note: string
-    }
-    */
-    
-    async getHistory() {
-        return await axios.get(API_URL + '/view_data/history')
-    }
+  /*
+  interface IHistory {
+    id: number,
+    time_stamp: Date,
+    book_id: number,
+    bookpage: number,
+    note: string
+  }
+  */
 
-    
-    async getById(_id: string) {
-        return await axios.get(API_URL + `/book/${_id}`)
-    }
-    
+  async getHistory() {
+    return await axios.get(API_URL + '/view_data/history');
+  }
 
-    
-    async addHistory(
-        //jwt_token: string,
-        ISBN: string,
-        book_title: string,
-        author: number,
-        price: number,
-        category: number,
-        edition: number,
-        current_page: number,
-      ) {
-        return axios.post(
-          API_URL + '/add_history',
-          {
-            ISBN: ISBN,
-            book_title: book_title,
-            author: author,
-            price: price,
-            category: category,
-            edition: edition,
-            current_page: current_page
-          },
-          //{ headers: { Authorization: `Bearer ${jwt_token}` },}
-        )
-      }
-      async deleteHistory(bookId: string) {
-        // 進行 HTTP DELETE 請求來刪除特定書籍
-        return axios.delete(API_URL + `/delete_book/${bookId}`);
-    }
-    
+  async getById(_id: string) {
+    return await axios.get(API_URL + `/book/${_id}`);
+  }
 
-    
+  async addHistory(
+    book_id: number,
+    book_page: number,
+    note: string
+  ) {
+    return axios.post(API_URL + '/add_history', {
+      book_id: book_id,
+      book_page: book_page,
+      note: note,
+    });
+  }
+
+  async deleteHistory(historyId: string) {
+    // 進行 HTTP DELETE 請求來刪除特定閱讀歷史
+    return axios.delete(API_URL + `/delete_history/${historyId}`);
+  }
 }
 
-export default new HistoryService()
+export default new HistoryService();
