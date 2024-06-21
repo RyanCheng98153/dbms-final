@@ -14,34 +14,11 @@ interface bookProp {
   current_page:number
 }
 
-const testBooks:bookProp[] = [
-  {
-    id: 1,
-    isbn: 9789867412,
-    title: '麥田捕手',
-    author: 'J.D. Salinger',
-    price: 450,
-    category: '文學',
-    edition: 1,
-    current_page: 100
-  },
-  {
-    id: 2,
-    isbn: 9789578626,
-    title: 'R語言生物資訊',
-    author: 'Rstudio Group',
-    price: 320,
-    category: '科學',
-    edition: 2,
-    current_page: 150
-  }
-]
-
 interface IBook{
   id: number
   ISBN: string,
   book_title: string,
-  author: number,
+  author: string,
   price: number,
   category: number,
   edition: number,
@@ -131,8 +108,11 @@ const bookRecord = (book:bookProp, index:number) => {
       <BookAuthor>{book.author}</BookAuthor>
       <BookPrice>{book.price}</BookPrice>
       <BookCategory>{book.category}</BookCategory>
-      <BookEdition>{book.edition}</BookEdition>
-      {/*<BookEdition>{'第'+book.edition+'版'}</BookEdition>*/}
+      {
+        (book.edition).toString()[0] == '第'
+        ? <BookEdition>{book.edition}</BookEdition>
+        : <BookEdition>{'第'+book.edition+'版'}</BookEdition>
+      }
       <CurrentPage>{book.current_page}</CurrentPage>
     </ListItem>
   );
@@ -146,8 +126,6 @@ const ListItem = styled.div.attrs<{ index: number }>((props) => {
   display: flex; 
   flex-direction: row;
   padding: 15px 15px; 
-  // margin-top: 5px;
-  // margin-bottom: 5px;
   height: 20;
   border-bottom: 1px solid gray;
   border-width: 3;
