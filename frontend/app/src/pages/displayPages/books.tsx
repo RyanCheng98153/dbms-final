@@ -1,8 +1,8 @@
 import List from "../../components/list";
 import styled from "styled-components";
-import { useState, useEffect } from "react";
+import { useState, useEffect ,useRef} from "react";
 import bookServices from "../../services/book-services";
-
+import favoriteServices from "../../services/favorite-services";
 interface bookProp {
   id:number,
   isbn:number,
@@ -26,7 +26,39 @@ interface IBook{
 }
 
 const Books = () => {
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleButtonClick = () => {
+    inputRef.current?.click();
+  };
+  const readpdf = async (bookId: number) => {
+    const pdfUrl = await bookServices.viewPDF(bookId.toString());
+    window.open(pdfUrl, '_blank');  // 在新標籤頁中打開 PDF
+  }
   // const [press, setPress] = useState<boolean>(false)
+  const handleDelete = async (bookId: number) => {
+    const isConfirmed = window.confirm("確定要將這本書從書籍中移除嗎？");
+    if (!isConfirmed) return;
+    await bookServices.deleteBook(bookId.toString());
+    setBooks(books.filter(book => book.id !== bookId));
+  }
+  const handleUploadPDF = async (event: React.ChangeEvent<HTMLInputElement>, bookId: number) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('book_id', bookId.toString());
+
+    try {
+      await bookServices.uploadPDF(formData);
+      alert('PDF 上傳成功');
+    } catch (error) {
+      alert('PDF 上傳失敗');
+    }
+  };
+
+
   const [books, setBooks] = useState<bookProp[]>([
     {
       id: 0,
@@ -68,7 +100,64 @@ const Books = () => {
     }
     fetchData()
   }, [])
-
+  const ListHeader = () => {
+    return (
+      <HeaderContainer>
+        <Index>{ '.' }</Index>
+        {<BookId >{'id'}</BookId>}
+        <BookIsbn>{'ISBN'}</BookIsbn>
+        <BookTitle>{'book title'}</BookTitle>
+        <BookAuthor>{'author'}</BookAuthor>
+        <BookPrice>{'price'}</BookPrice>
+        <BookCategory>{'category'}</BookCategory>
+        <BookEdition>{'edition'}</BookEdition>
+        <CurrentPage>{'current page'}</CurrentPage>
+      </HeaderContainer>
+    )
+  }
+  
+  const bookRecord = (book:bookProp, index:number) => {
+    
+    const handleAdd_favorite = async (bookId: number) => {
+      try {
+        await favoriteServices.add_favorite(bookId);
+        alert(`書籍ID ${bookId} 已加入我的最愛`);
+      } catch (error) {
+        alert('這本書已經在我的最愛了');
+      }
+    };
+    return (
+      <ListItem index={index}>
+        <Index>{ index+1 }</Index>
+        {<BookId >{book.id}</BookId>}
+        <BookIsbn>{book.isbn}</BookIsbn>
+        <BookTitle>{book.title}</BookTitle>
+        <BookAuthor>{book.author}</BookAuthor>
+        <BookPrice>{book.price}</BookPrice>
+        <BookCategory>{book.category}</BookCategory>
+        {
+          (book.edition).toString()[0] == '第'
+          ? <BookEdition>{book.edition}</BookEdition>
+          : <BookEdition>{'第'+book.edition+'版'}</BookEdition>
+        }
+        <CurrentPage>{book.current_page}</CurrentPage>
+        <Operation>
+        <Favorite_Button onClick={() => handleAdd_favorite(book.id)}>加入最愛</Favorite_Button>
+        <Delete_Button onClick={() => handleDelete(book.id)}>刪除書籍</Delete_Button>
+        <Upload_Button onClick={handleButtonClick}>上傳pdf</Upload_Button>
+          <input
+            type="file"
+            accept="application/pdf"
+            ref={inputRef}
+            style={{ display: 'none' }}
+            onChange={(event) => handleUploadPDF(event, book.id)}
+          />
+        <Read_Button onClick={() => readpdf(book.id)}>閱讀pdf</Read_Button>
+        </Operation>
+      </ListItem>
+    );
+  }
+  
 
   return (
     <div>
@@ -82,41 +171,6 @@ const Books = () => {
   );
 };
 
-const ListHeader = () => {
-  return (
-    <HeaderContainer>
-      <Index>{ '.' }</Index>
-      {<BookId >{'id'}</BookId>}
-      <BookIsbn>{'ISBN'}</BookIsbn>
-      <BookTitle>{'book title'}</BookTitle>
-      <BookAuthor>{'author'}</BookAuthor>
-      <BookPrice>{'price'}</BookPrice>
-      <BookCategory>{'category'}</BookCategory>
-      <BookEdition>{'edition'}</BookEdition>
-      <CurrentPage>{'current page'}</CurrentPage>
-    </HeaderContainer>
-  )
-}
-
-const bookRecord = (book:bookProp, index:number) => {
-  return (
-    <ListItem index={index}>
-      <Index>{ index+1 }</Index>
-      {<BookId >{book.id}</BookId>}
-      <BookIsbn>{book.isbn}</BookIsbn>
-      <BookTitle>{book.title}</BookTitle>
-      <BookAuthor>{book.author}</BookAuthor>
-      <BookPrice>{book.price}</BookPrice>
-      <BookCategory>{book.category}</BookCategory>
-      {
-        (book.edition).toString()[0] == '第'
-        ? <BookEdition>{book.edition}</BookEdition>
-        : <BookEdition>{'第'+book.edition+'版'}</BookEdition>
-      }
-      <CurrentPage>{book.current_page}</CurrentPage>
-    </ListItem>
-  );
-}
 
 const ListItem = styled.div.attrs<{ index: number }>((props) => {
   return {
@@ -153,7 +207,10 @@ const listItemCommon = `
   padding-inline: 1px;
   text-align: right;
 `
-
+const Operation = styled.text`
+  ${listItemCommon}
+  width: 70px;
+`;
 const Index = styled.text`
   ${listItemCommon}
   text-align: left;
@@ -191,4 +248,69 @@ const CurrentPage = styled.text`
   ${listItemCommon}
   width: 100px;
 `
+
+const Favorite_Button = styled.button`
+  margin-left: 12px;
+  margin-bottom: 3px;
+  width: 70px;
+  background-color: green;
+  color: white;
+  border: none;
+  cursor: pointer;
+  &:hover {
+    background-color: darkgreen;
+  }
+`;
+
+const Delete_Button = styled.button`
+  margin-left: 12px;
+  margin-bottom: 3px;
+  width: 70px;
+  background-color: green;
+  color: white;
+  border: none;
+  cursor: pointer;
+  &:hover {
+    background-color: darkgreen;
+  }
+`;
+
+const Upload_Button = styled.button`
+  margin-left: 12px;
+  margin-bottom: 3px;
+  width: 70px;
+  background-color: green;
+  color: white;
+  border: none;
+  cursor: pointer;
+  &:hover {
+    background-color: darkgreen;
+  }
+`;
+
+const Read_Button = styled.button`
+  margin-left: 12px;
+  margin-bottom: 3px;
+  width: 70px;
+  background-color: green;
+  color: white;
+  border: none;
+  cursor: pointer;
+  &:hover {
+    background-color: darkgreen;
+  }
+`;
+
+const Note_Button = styled.button`
+  margin-left: 12px;
+  margin-bottom: 3px;
+  width: 70px;
+  background-color: green;
+  color: white;
+  border: none;
+  cursor: pointer;
+  &:hover {
+    background-color: darkgreen;
+  }
+`;
 export default Books;
