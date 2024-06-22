@@ -25,6 +25,12 @@ class BookService {
   }
   */
 
+  async searchBook(
+    category: string
+  ) {
+    return axios.get(API_URL + `/search_by_category?category=${category}`)
+  }
+
   async addBooks(
     //jwt_token: string,
     ISBN: string,
@@ -62,7 +68,6 @@ class BookService {
         }
       })
   }
-
 }
 
 export default new BookService()
