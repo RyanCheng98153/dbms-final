@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useState, useEffect ,useRef} from "react";
 import bookServices from "../../services/book-services";
 import favoriteServices from "../../services/favorite-services";
+const API_URL = 'http://127.0.0.1:5000'
 interface bookProp {
   id:number,
   isbn:number,
@@ -112,6 +113,7 @@ const Books = () => {
         <BookCategory>{'category'}</BookCategory>
         <BookEdition>{'edition'}</BookEdition>
         <CurrentPage>{'current page'}</CurrentPage>
+        <Operation>操作</Operation>
       </HeaderContainer>
     )
   }
