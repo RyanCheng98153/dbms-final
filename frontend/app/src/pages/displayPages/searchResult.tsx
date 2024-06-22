@@ -3,7 +3,8 @@ import List from "../../components/list";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import bookServices from "../../services/book-services";
-
+import { useContext } from "react";
+import { CategoryContext } from "../../components/shareContext";
 
 interface bookProp {
     id:number,
@@ -16,29 +17,6 @@ interface bookProp {
     current_page:number
   }
   
-  const testBooks:bookProp[] = [
-    {
-      id: 1,
-      isbn: 9789867412,
-      title: '麥田捕手',
-      author: 'J.D. Salinger',
-      price: 450,
-      category: '文學',
-      edition: 1,
-      current_page: 100
-    },
-    {
-      id: 2,
-      isbn: 9789578626,
-      title: 'R語言生物資訊',
-      author: 'Rstudio Group',
-      price: 320,
-      category: '科學',
-      edition: 2,
-      current_page: 150
-    }
-  ]
-  
   interface IBook{
     id: number
     ISBN: string,
@@ -50,21 +28,32 @@ interface bookProp {
     current_page: number,
   }
 
+const testBooks:bookProp[] = [
+  {
+    id: 0,
+    isbn: 100000000,
+    title: '測試 & test',
+    author: 'robot',
+    price: 0,
+    category: '測試書籍',
+    edition: 0,
+    current_page: 0
+  }
+]
+
 const SearchResult = () => {
   // const [press, setPress] = useState<boolean>(false)
-  const [books, setBooks] = useState<bookProp[]>([
-    {
-      id: 0,
-      isbn: 100000000,
-      title: '測試 & test',
-      author: 'robot',
-      price: 0,
-      category: '測試書籍',
-      edition: 0,
-      current_page: 0
-    }
-  ])
   
+  // shared category: A magical way to share usestate component between two pages
+  const context = useContext(CategoryContext);
+  if (!context) {
+    throw new Error('CategoryContext must be used within a CategoryProvider');
+  } const { category } = context;
+  
+  // books source initialize
+  const [masterSource, setMasterSource] = useState<bookProp[]>(testBooks)
+  const [filteredSource, setFilteredSource] = useState<bookProp[]>(masterSource)
+
   React.useEffect( () => {
     const fetchData = async () => {
       try {
@@ -87,7 +76,7 @@ const SearchResult = () => {
           }
         )
         
-        setBooks(responseBooks)
+        setMasterSource(responseBooks)
       } catch (error) {
         console.error('An error occurred while fetching data:', error )
       }
@@ -95,13 +84,29 @@ const SearchResult = () => {
     fetchData()
   }, [])
 
+  const filterBooks = (value: string | null) => {
+    if(value === null || value === ""  ){
+        setFilteredSource(masterSource);
+    }
+    else {
+      const filtered = masterSource.filter((book) =>
+        //book.title.toLowerCase().includes(value.toLowerCase())
+        book.category === category
+      );  
+      setFilteredSource(filtered);
+    }
+  };
+
+  useEffect( ()=>{
+    filterBooks(category)
+  }, [category] )
 
   return (
     <div>
         <ListHeader/>
         <List
           // items={testBooks}
-          items={books}
+          items={filteredSource}
           renderItem={bookRecord}
         />
     </div>
