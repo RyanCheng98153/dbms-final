@@ -2,14 +2,16 @@ import React from "react";
 import ResultDisplay from "./pages/displayPages";
 import OperationsPanel from "./pages/operationPages";
 import styled from "styled-components";
+import { CategoryProvider } from "./components/shareContext";
 
 const App: React.FC = () => {
   return (
     <div>
-      {/*<h1>Book Management System</h1>*/}
-      <Container>  
+      <Container>
+        <CategoryProvider>
         <OperationsPanel/>
-        <ResultDisplay/>
+          <ResultDisplay/>
+        </CategoryProvider>  
       </Container>
     </div>
   );
