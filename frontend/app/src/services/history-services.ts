@@ -17,40 +17,41 @@ class HistoryService {
         return await axios.get(API_URL + '/view_data/history')
     }
 
-    
+    /*
     async getById(_id: string) {
         return await axios.get(API_URL + `/book/${_id}`)
     }
-    
+    */
 
     
     async addHistory(
         //jwt_token: string,
-        ISBN: string,
-        book_title: string,
-        author: number,
-        price: number,
-        category: number,
-        edition: number,
-        current_page: number,
+        book_id: number,
+        book_page: number,
+        note: string,
       ) {
         return axios.post(
           API_URL + '/add_history',
           {
-            ISBN: ISBN,
-            book_title: book_title,
-            author: author,
-            price: price,
-            category: category,
-            edition: edition,
-            current_page: current_page
+            book_id: book_id,
+            bookpage: book_page,
+            note: note,
           },
           //{ headers: { Authorization: `Bearer ${jwt_token}` },}
         )
       }
-      async deleteHistory(bookId: string) {
-        // 進行 HTTP DELETE 請求來刪除特定書籍
-        return axios.delete(API_URL + `/delete_book/${bookId}`);
+
+    async deleteHistory(
+      historyId: string
+    ) {
+      // 進行 HTTP DELETE 請求來刪除特定書籍
+      return axios.delete(
+        API_URL + `/delete_data`,{
+          data:{
+            table: '閱讀歷史',
+            id: historyId
+          }
+        })
     }
     
 
