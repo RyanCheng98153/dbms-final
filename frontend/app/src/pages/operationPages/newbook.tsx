@@ -14,7 +14,7 @@ interface Book {
 
 interface ServiceBook {
     //jwt_token: string,
-    ISBN: string;
+    ISBN: number;
     book_title: string;
     author: string;
     price: number;
