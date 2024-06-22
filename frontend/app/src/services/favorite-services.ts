@@ -21,10 +21,8 @@ class FavoriteService {
         return await axios.get(API_URL + '/view_data/favorites')
     }
     async deletefavorite(bookId: number) {
-      // 進行 HTTP DELETE 請求來刪除特定書籍
-      return axios.delete(API_URL + `/delete_favorite/${bookId}`);
+      return await axios.delete(API_URL + `/delete_favorite/${bookId}`);
   }
-    
 
     
 }
