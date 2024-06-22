@@ -16,7 +16,7 @@ interface bookProp {
 
 interface IBook{
   id: number
-  ISBN: string,
+  ISBN: number,
   book_title: string,
   author: string,
   price: number,
