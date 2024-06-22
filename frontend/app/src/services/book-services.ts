@@ -31,6 +31,27 @@ class BookService {
     return axios.get(API_URL + `/search_by_category?category=${category}`)
   }
 
+  
+  async viewPDF(
+    bookid:string
+  ) {
+    return axios.get(API_URL + `/view_pdf/${bookid}`)  
+  }
+
+  async uploadPDF(
+    bookid:string,
+    file:FormData
+  ) {
+    return axios.post(
+      API_URL + '//upload_pdf',
+      {
+        book_id: bookid,
+        file: file
+      },
+      //{ headers: { Authorization: `Bearer ${jwt_token}` },}
+    )
+  }
+
   async addBooks(
     //jwt_token: string,
     ISBN: string,
