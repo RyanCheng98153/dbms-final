@@ -43,6 +43,45 @@ const initialBookState = {
     current_page: 0,
 };
 
+/*
+// 快速加資料的方法
+const testbook: Book[] = [
+    {isbn:9789867412, title:"麥田捕手", author:"J.D. Salinger", price:450, category:"文學", edition:1, current_page:100},
+    {isbn:9789578626, title:"R語言生物資訊", author:"Rstudio Group", price:320, category:"科學", edition:2, current_page:150},
+    {isbn:9789573286, title:"摩訶婆羅多", author:"Unknown", price:520, category:"歷史", edition:3, current_page:200},
+    {isbn:9789578691, title:"純粹理性批判", author:"Kant", price:300, category:"哲學", edition:1, current_page:250, },
+    {isbn:9789866785, title:"資本論", author:"K. Marx", price:420, category:"社會學", edition:2, current_page:300, },
+    {isbn:9789573486, title:"傲慢與偏見", author:"Jane Austen", price:320, category:"西洋文學", edition:3, current_page:320, },
+    {isbn:9789578964, title:"1984", author:"George Orwell", price:520, category:"西洋文學", edition:1, current_page:520, },
+    {isbn:9789766485, title:"紅樓夢", author:"曹雪芹", price:300, category:"中國文學", edition:2, current_page:300, },
+    {isbn:9789867413, title:"遠大前程", author:"Charles Dickens", price:400, category:"西洋文學", edition:1, current_page:450, },
+    {isbn:9789578627, title:"物種起源", author:"Charles Darwin", price:350, category:"科學", edition:2, current_page:500, },
+    {isbn:9789573287, title:"大衛科波菲爾", author:"Charles Dickens", price:450, category:"西洋文學", edition:3, current_page:150, },
+    {isbn:9789578692, title:"尼采全集", author:"Friedrich Nietzsche", price:600, category:"哲學", edition:1, current_page:100, },
+    {isbn:9789866786, title:"查拉圖斯特拉如是說", author:"Friedrich Nietzsche", price:400, category:"哲學", edition:2, current_page:200, },
+    {isbn:9789573487, title:"瓦爾登湖", author:"Henry David Thoreau", price:300, category:"文學", edition:3, current_page:250, },
+    {isbn:9789578965, title:"百年孤寂", author:"Gabriel Garcia Marquez", price:350, category:"文學", edition:1, current_page:300, },
+    {isbn:9789766486, title:"堂吉訶德", author:"Miguel de Cervantes", price:500, category:"西洋文學", edition:2, current_page:350, },
+    {isbn:9789867414, title:"變形記", author:"Franz Kafka", price:250, category:"文學", edition:1, current_page:400, },
+    {isbn:9789578628, title:"三體", author:"劉慈欣", price:450, category:"科幻", edition:2, current_page:450, },
+    {isbn:9789573288, title:"哈利波特", author:"J.K. Rowling", price:600, category:"奇幻", edition:3, current_page:500, },
+    {isbn:9789578693, title:"冰與火之歌", author:"George R.R. Martin", price:700, category:"奇幻", edition:1, current_page:550, }
+]
+
+const handleInsertClick = async () => {
+    const newBook:Book = testbook[0]
+    // 呼叫 BookService 的 addBooks 方法
+    await bookServices.addBooks(
+        newBook.isbn.toString(),
+        newBook.title,
+        newBook.author,
+        newBook.price,
+        newBook.category,
+        newBook.edition,
+        newBook.current_page
+    );
+};
+*/
 const NewBook = () => {
     const [book, setBook] = useState<Book>(initialBookState);
     //const [bookList, setBookList] = useState<Book[]>([]);
@@ -65,16 +104,6 @@ const NewBook = () => {
         };
 
         try {
-            console.log('add book')
-            
-            if( newBook.isbn < 1000000000 ||
-                newBook.title == '' ||
-                newBook.edition < 0 ||
-                newBook.current_page < 0
-                // newBook.author == '' 
-            ){
-                throw("invalid input")
-            }
             
             // 呼叫 BookService 的 addBooks 方法
             await bookServices.addBooks(
@@ -87,20 +116,15 @@ const NewBook = () => {
                 newBook.current_page
             );
 
-            // 將新書籍添加到本地的書籍列表
-            //setBookList([...bookList, newBook]);
-            setBook(initialBookState);  // 清空輸入
             setErrorMessage(null);  // 清除錯誤訊息
         } catch (error) {
             // 處理錯誤
-            if(error == "invalid input"){
-                setErrorMessage("請正確的輸入書籍資訊")
-            }
-            else{
-                setErrorMessage("新增書籍失敗，請稍後再試");
-            }
+            setErrorMessage("新增書籍失敗，請稍後再試");
+            
         }
     };
+
+    
 
     return (
         <Container>
