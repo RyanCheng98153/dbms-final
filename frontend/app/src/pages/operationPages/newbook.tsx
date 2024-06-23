@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import bookServices from "../../services/book-services";
+import { categoryOptions } from "../../components/textResources";
 
 interface Book {
     isbn: number;
@@ -82,6 +83,9 @@ const handleInsertClick = async () => {
     );
 };
 */
+
+
+
 const NewBook = () => {
     const [book, setBook] = useState<Book>(initialBookState);
     //const [bookList, setBookList] = useState<Book[]>([]);
@@ -124,6 +128,18 @@ const NewBook = () => {
         }
     };
 
+    // dropdown of category 下拉式選單:分類
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    
+    const handleOptionSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setBook({ ...book, [name]: value });
+    };
+
+    const handleSelectCategory = (selectCategory: string) => {
+        setBook({ ...book, ['category']: selectCategory });
+        setDropdownOpen(false)
+    };
     
 
     return (
@@ -161,12 +177,26 @@ const NewBook = () => {
                 placeholder="價格"
             />
             <Label>類別</Label>
-            <Input
-                name="category"
+            <DropdownInput
+                type="text"
+                name="title"
                 value={book.category}
-                onChange={handleInputChange}
-                placeholder="類別"
+                onClick={()=>{setDropdownOpen(true)}}
+                onChange={handleOptionSelect}
+                placeholder="請選擇類別"
+                readOnly
             />
+            {dropdownOpen && (
+              <Dropdown>
+                <DropdownList maxHeight={200}> {/* Adjust maxHeight as needed */}
+                  {categoryOptions.map((category) => (
+                    <Option key={category} onClick={() => handleSelectCategory(category)}>
+                    {category}
+                    </Option>
+                  ))}
+                </DropdownList>
+              </Dropdown>
+            )}
             <Label>版次</Label>
             <Input
                 name="edition"
@@ -288,5 +318,47 @@ const Error = styled.div`
     margin-bottom: 20px;
     text-align: center;
 `;
+
+const DropdownInput = styled.input`
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  
+    &:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+      outline: none;
+    }
+  `;
+
+const Dropdown = styled.div`
+    //position: absolute;
+    //width: 500px;
+    width: 100%;
+    background-color: #f9f9f9;
+    //z-index: 1;
+  `;
+  
+  const DropdownList = styled.div<{ maxHeight: number }>`
+    max-height: ${(props) => props.maxHeight}px;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  `;
+  
+  const Option = styled.div`
+    padding: 10px;
+    cursor: pointer;
+    //background-color: yellow;
+    &:hover {
+      background-color: #f1f1f1;
+    }
+  `;
 
 export default NewBook;
