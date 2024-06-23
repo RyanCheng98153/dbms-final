@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import bookServices from "../../services/book-services";
+import historyServices from "../../services/history-services";
 
 interface bookProp {
   id: number;
@@ -23,31 +24,7 @@ interface IBook{
     edition: number,
     current_page: number,
   }
-
-const testBooks:bookProp[] = [
-    {
-      id: 1,
-      isbn: 9789867412,
-      title: '麥田捕手',
-      author: 'J.D. Salinger',
-      price: 450,
-      category: '文學',
-      edition: 1,
-      current_page: 100
-    },
-    {
-      id: 2,
-      isbn: 9789578626,
-      title: 'R語言生物資訊',
-      author: 'Rstudio Group',
-      price: 320,
-      category: '科學',
-      edition: 2,
-      current_page: 150
-    }
-  ]
   
-
 interface BookHistory {
   id: number;
   time_stamp: Date;
@@ -56,7 +33,7 @@ interface BookHistory {
   note: string;
 }
 
-const initialBookState = {
+const initialBookHistoryState = {
   id: 0,
   time_stamp: new Date(),
   book_id: 0,
@@ -79,11 +56,12 @@ const NewBookmark: React.FC = () => {
   ])
   const [filteredBooks, setFilteredBooks] = useState<bookProp[]>([]);
       
-  const [bookmark, setBookmark] = useState<BookHistory>(initialBookState);
-  const [bookmarkList, setBookmarkList] = useState<BookHistory[]>([]);
+  const [bookmark, setBookHistory] = useState<BookHistory>(initialBookHistoryState);
+  const [bookmarkList, setBookHistoryList] = useState<BookHistory[]>([]);
   
   const [searchInput, setSearchInput] = useState<string>('');
   
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   
   React.useEffect( () => {
     const fetchData = async () => {
@@ -116,14 +94,14 @@ const NewBookmark: React.FC = () => {
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setBookmark({ ...bookmark, [name]: value });
+    setBookHistory({ ...bookmark, [name]: value });
     setSearchInput(value);
     filterBooks(value);
   };
   
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setBookmark({ ...bookmark, [name]: value });
+    setBookHistory({ ...bookmark, [name]: value });
   };
 
   const filterBooks = (value: string) => {
@@ -145,22 +123,44 @@ const NewBookmark: React.FC = () => {
         console.log("empty")
         return
     }
-    setBookmark({ ...bookmark, book_id: selectedBook.id });
+    setBookHistory({ ...bookmark, book_id: selectedBook.id });
     setSearchInput(selectedBook.title);
     setFilteredBooks([]);
   };
 
-  const handleBtnClick = () => {
-    const newBookmark: BookHistory = {
-      id: bookmarkList.length + 1,
-      time_stamp: new Date(),
+  const handleBtnClick = async () => {
+    const newHistory = {
+      //id: bookmarkList.length + 1,
+      //time_stamp: new Date(),
       book_id: bookmark.book_id,
       book_page: bookmark.book_page,
       note: bookmark.note,
     };
 
-    setBookmarkList([...bookmarkList, newBookmark]);
-    setBookmark(initialBookState);
+    try {
+      if (newHistory.book_id == 0) {throw "書籍名稱不存在，請輸入書籍名稱"}
+      if (newHistory.book_page < 0) {throw "頁數不能小於0"}
+
+      // 呼叫 BookService 的 addBooks 方法
+      await historyServices.addHistory(
+          newHistory.book_id,
+          newHistory.book_page,
+          newHistory.note
+      );
+      setBookHistory(initialBookHistoryState)
+
+      setErrorMessage(null);  // 清除錯誤訊息
+  } catch (error) {
+      // 處理錯誤
+      
+      if (error !== null){
+        setErrorMessage( "" + error )
+      }
+      //setErrorMessage("新增書籍失敗，請稍後再試");
+  }
+
+    //setBookHistoryList([...bookmarkList, newBookmark]);
+    setBookHistory(initialBookHistoryState);
     setSearchInput('');
   };
 
@@ -169,6 +169,7 @@ const NewBookmark: React.FC = () => {
   return (
     <Container>
       <Title>新增書籤</Title>
+      {errorMessage && <Error>{errorMessage}</Error>}
       <Label>書籍名稱</Label>
       <Input
         type="text"
@@ -207,6 +208,8 @@ const NewBookmark: React.FC = () => {
         placeholder="請輸入備註"
       />
       <Button onClick={handleBtnClick}>提交</Button>
+      {/*
+       */}
       <BookmarkList>
         {bookmarkList.map((item) => (
           <BookmarkItem key={item.id}>
@@ -348,6 +351,12 @@ const Option = styled.div`
   &:hover {
     background-color: #f1f1f1;
   }
+`;
+
+const Error = styled.div`
+    color: red;
+    margin-bottom: 20px;
+    text-align: center;
 `;
 
 export default NewBookmark;
