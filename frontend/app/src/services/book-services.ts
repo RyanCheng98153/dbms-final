@@ -25,33 +25,6 @@ class BookService {
   }
   */
 
-  async searchBook(
-    category: string
-  ) {
-    return axios.get(API_URL + `/search_by_category?category=${category}`)
-  }
-
-  
-  async viewPDF(
-    bookid:string
-  ) {
-    return axios.get(API_URL + `/view_pdf/${bookid}`)  
-  }
-
-  async uploadPDF(
-    bookid:string,
-    file:FormData
-  ) {
-    return axios.post(
-      API_URL + '//upload_pdf',
-      {
-        book_id: bookid,
-        file: file
-      },
-      //{ headers: { Authorization: `Bearer ${jwt_token}` },}
-    )
-  }
-
   async addBooks(
     //jwt_token: string,
     ISBN: string,
@@ -73,7 +46,7 @@ class BookService {
         edition: edition,
         current_page: current_page
       },
-      //{ headers: { Authorization: `Bearer ${jwt_token}` },}
+      //{ headers: { Authorization: Bearer ${jwt_token} },}
     )
   }
   // 新增刪除書籍的方法
@@ -82,7 +55,42 @@ class BookService {
   ) {
     // 進行 HTTP DELETE 請求來刪除特定書籍
     return axios.delete(
-      API_URL + `/delete_book/${parseInt(bookId)}`)
+      API_URL + `/delete_data`,{
+        data:{
+          table: '書籍',
+          id: bookId
+        }
+      })
+  }
+  async uploadPDF (formData:FormData) {
+    return axios.post(API_URL +'/upload_pdf', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'  //文件上傳
+      }
+    });
+  };
+  async viewPDF(bookId: string): Promise<string> {
+    return API_URL + '/view_pdf/' + bookId;
+  } 
+  async add_note(bookId: string, title: string, content: string) {
+    try {
+      const response = await axios.post(API_URL+'/add_note', {
+        book_id: bookId,
+        title: title,
+        content: content
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error adding note:', error);
+      throw error;
+    }
+  }
+  async viewnote(bookId: number) {
+    const response = await axios.get(`${API_URL}/notes/${bookId}`);
+    return response;
+  }
+  async delete_note(note_id: number) {
+    return await axios.delete(`${API_URL}/delete_note/${note_id}`);
   }
 }
 
