@@ -62,7 +62,49 @@ class BookService {
         }
       })
   }
-
+  async uploadPDF (formData:FormData) {
+    return axios.post(API_URL +'/upload_pdf', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'  //文件上傳
+      }
+    });
+  };
+  async viewPDF(bookId: string): Promise<string> {
+    return API_URL + '/view_pdf/' + bookId;
+  } 
+  async add_note(bookId: string, title: string, content: string) {
+    try {
+      const response = await axios.post(API_URL+'/add_note', {
+        book_id: bookId,
+        title: title,
+        content: content
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error adding note:', error);
+      throw error;
+    }
+  }
+  async viewnote(bookId: number) {
+    const response = await axios.get(`${API_URL}/notes/${bookId}`);
+    return response;
+  }
+  async delete_note(note_id: number) {
+    return await axios.delete(`${API_URL}/delete_note/${note_id}`);
+  }
+  async update_note(note_id:number,title: string, content: string) {
+    try {
+      const response = await axios.put(API_URL+'/update_note', {
+        id: note_id,
+        title: title,
+        content: content
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error update note:', error);
+      throw error;
+    }
+  }
 }
 
 export default new BookService()
