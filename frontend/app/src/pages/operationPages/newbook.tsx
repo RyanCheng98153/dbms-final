@@ -119,6 +119,7 @@ const NewBook = () => {
                 newBook.edition,
                 newBook.current_page
             );
+            setBook(initialBookState)
 
             setErrorMessage(null);  // 清除錯誤訊息
         } catch (error) {
