@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useContext } from "react";
 import { CategoryContext } from "../../components/shareContext";
+import { categoryOptions } from "../../components/textResources";
 
 const initialBookState = {
     id: 0,
@@ -10,23 +11,10 @@ const initialBookState = {
     book_page: 0,
     note: "",
   };
-
-const categoryOptions = [
-    '請選擇類別',
-    '文學',
-    '科學',
-    '歷史',
-    '哲學',
-    '社會學',
-    '西洋文學',
-    '中國文學',
-    '科幻',
-    '奇幻'
-]
   
 const SearchCategory: React.FC = () => {
     // const [category, setCategory] = useState<string>('')
-    const [masterCategory, setMasterCategory] = useState<string[]>(categoryOptions)
+    //const [masterCategory, setMasterCategory] = useState<string[]>(categoryOptions)
     const [searchInput, setSearchInput] = useState<string>('');
 
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -58,7 +46,7 @@ const SearchCategory: React.FC = () => {
       <Container>
         <Title>按分類搜尋</Title>
         <Label>選擇分類</Label>
-        <Input
+        <DropdownInput
           type="text"
           name="title"
           value={searchInput}
@@ -72,7 +60,7 @@ const SearchCategory: React.FC = () => {
         {dropdownOpen && (
           <Dropdown>
             <DropdownList maxHeight={200}> {/* Adjust maxHeight as needed */}
-              {masterCategory.map((category) => (
+              {categoryOptions.map((category) => (
                 <Option key={category} onClick={() => handleSelectCategory(category)}>
                   {category}
                 </Option>
@@ -116,7 +104,7 @@ const SearchCategory: React.FC = () => {
     color: #555;
   `;
   
-  const Input = styled.input`
+  const DropdownInput = styled.input`
     width: 100%;
     padding: 12px;
     margin-bottom: 10px;
