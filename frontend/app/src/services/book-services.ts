@@ -92,6 +92,10 @@ class BookService {
   async delete_note(note_id: number) {
     return await axios.delete(`${API_URL}/delete_note/${note_id}`);
   }
+
+  async getBookWithId(book_id:number) {
+    return await axios.get(`${API_URL}/search_book/${book_id}`)
+  }
 }
 
 export default new BookService()
