@@ -319,7 +319,8 @@ const Books = () => {
 };
 
 const Container = styled.div`
-  background-color: #c8d9a2;  // 柔和的背景色
+  width: 720px;
+  background-color: #f4e9d8;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -334,14 +335,14 @@ const ListItem = styled.div.attrs<{ index: number }>((props) => {
   display: flex; 
   flex-direction: row;
   padding: 15px 15px; 
-  border-bottom: 1px dashed #e0e0e0;  // 使用虛線邊框
-  background-color: ${(props) => props.index % 2 ? "#FFF0F5" : "#e1f6fb"};  // 使用柔和的背景色
+  border-bottom: 1px solid #D3B8AE;  // 使用復古色調的邊框
+  background-color: ${(props) => props.index % 2 ? "#f5f5dc" : "#fffaf0"};  // 使用復古色調的背景色
   justify-content: space-between;
   align-items: center;
   transition: background-color 0.3s;
 
   &:hover {
-    background-color: #E6E6FA;  // 使用柔和的懸停效果
+    background-color: #FFEFD5;  // 使用復古色調的懸停效果
   }
 `
 
@@ -351,8 +352,8 @@ const HeaderContainer = styled.div`
   padding: 10px 15px; 
   margin-top: 5px;
   margin-bottom: 5px;
-  border-bottom: 2px solid #e0e0e0;
-  background-color: #FFFACD;  // 使用柔和的背景色
+  border-bottom: 2px solid #D3B8AE;
+  background-color: #DEB887;  // 使用復古色調的背景色
   align-items: center;
   justify-content: space-between;
 `
@@ -361,6 +362,7 @@ const listItemCommon = `
   margin-left: 1px;
   margin-right: 1px;
   text-align: right;
+  color: #8B4513;  // 使用復古色調的文本顏色
 `
 
 const Operation = styled.text`
