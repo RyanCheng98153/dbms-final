@@ -307,18 +307,24 @@ const Books = () => {
 
 
   return (
-    <div>
+    <Container>
       <ListHeader />
       <List
         // items={testBooks}
         items={books}
         renderItem={bookRecord}
       />
-    </div>
+    </Container>
   );
 };
 
-
+const Container = styled.div`
+  background-color: #c8d9a2;  // 柔和的背景色
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: 'Georgia', serif;
+`;
 // Books list styling
 const ListItem = styled.div.attrs<{ index: number }>((props) => {
   return {
@@ -328,14 +334,14 @@ const ListItem = styled.div.attrs<{ index: number }>((props) => {
   display: flex; 
   flex-direction: row;
   padding: 15px 15px; 
-  border-bottom: 1px solid #e0e0e0;
-  background-color: ${(props) => props.index % 2 ? "#f9f9f9" : "#ffffff"};
+  border-bottom: 1px dashed #e0e0e0;  // 使用虛線邊框
+  background-color: ${(props) => props.index % 2 ? "#FFF0F5" : "#e1f6fb"};  // 使用柔和的背景色
   justify-content: space-between;
   align-items: center;
   transition: background-color 0.3s;
 
   &:hover {
-    background-color: #f0f0f0;
+    background-color: #E6E6FA;  // 使用柔和的懸停效果
   }
 `
 
@@ -346,7 +352,7 @@ const HeaderContainer = styled.div`
   margin-top: 5px;
   margin-bottom: 5px;
   border-bottom: 2px solid #e0e0e0;
-  background-color: #ffefcc;
+  background-color: #FFFACD;  // 使用柔和的背景色
   align-items: center;
   justify-content: space-between;
 `
