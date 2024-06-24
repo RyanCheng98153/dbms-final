@@ -95,6 +95,7 @@ const BookHistoryItem = ({ record, index }: { record: IHistory, index: number })
 };
 
 const Container = styled.div`
+  width: 720px;
   background-color: #f4e9d8;
   padding: 20px;
   border-radius: 10px;
