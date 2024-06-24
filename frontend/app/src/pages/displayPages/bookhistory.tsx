@@ -95,11 +95,11 @@ const BookHistoryItem = ({ record, index }: { record: IHistory, index: number })
 };
 
 const Container = styled.div`
-  background-image: url('/path/to/your/illustration-background.jpg');
-  background-size: cover;
+  background-color: #f4e9d8;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: 'Georgia', serif;
 `;
 
 const ListItem = styled.div.attrs<{ index: number }>((props) => {
@@ -110,11 +110,10 @@ const ListItem = styled.div.attrs<{ index: number }>((props) => {
   display: flex;
   flex-direction: row;
   padding: 15px;
-  border-bottom: 1px solid gray;
-  background-color: ${(props) => props.index % 2 ? "#f0f8ff" : "#e6e6fa"};
+  border-bottom: 1px solid #8b4513;
+  background-color: ${(props) => props.index % 2 ? "#f5f5dc" : "#fffaf0"};
   justify-content: space-between;
   align-items: center;
-  font-family: 'Handwritten', sans-serif;
 `;
 
 const HeaderContainer = styled.div`
@@ -123,11 +122,10 @@ const HeaderContainer = styled.div`
   padding: 10px;
   margin-top: 5px;
   margin-bottom: 5px;
-  border-bottom: 1px solid gray;
-  background-color: #ffebcd;
+  border-bottom: 1px solid #8b4513;
+  background-color: #d2b48c;
   align-items: center;
   justify-content: space-between;
-  font-family: 'Handwritten', sans-serif;
 `;
 
 const listItemCommon = `
@@ -164,7 +162,7 @@ const PageNote = styled.div`
 `;
 
 const Text = styled.span`
-  font-family: 'Handwritten', sans-serif;
+  font-family: 'Georgia', serif;
 `;
 
 export default BookHistory;
