@@ -8,17 +8,16 @@ interface planProp {
     book_id:number,
     expired_date:Date,
     is_complete:boolean
-  }
+}
 
-
-  interface IplanProp {
+interface IplanProp {
     id:number,
     book_id:number,
     expired_date:Date,
     is_complete:boolean
-  }
+}
 
-  const ReadingPlan = () => {
+const ReadingPlan = () => {
     const [testPlan, setTestPlan] = useState<planProp[]>([
         {
             id: 1,
@@ -55,117 +54,119 @@ interface planProp {
     }, []);
 
     return (
-        <div>
+        <Container>
             <ListHeader />
             <List
                 items={testPlan}
                 renderItem={(item, index) => <PlanRecord record={item} index={index} />}
             />
-        </div>
+        </Container>
     );
 };
 
 
 const ListHeader = () => {
     return (
-      <HeaderContainer>
-        <PlanId>{'record_No'}</PlanId>
-        <BookId>{'book_name'}</BookId>
-        <ExpiredDate>{'Expried_date'}</ExpiredDate>
-        <IsComplete>{'is_complete'}</IsComplete>
-      </HeaderContainer>
+        <HeaderContainer>
+            <PlanId>{'record_No'}</PlanId>
+            <BookId>{'book_name'}</BookId>
+            <ExpiredDate>{'Expried_date'}</ExpiredDate>
+            <IsComplete>{'is_complete'}</IsComplete>
+        </HeaderContainer>
     )
-  }
+}
 
-   
+
 const PlanRecord = ({ record, index }: { record: planProp, index: number }) => {
-  const [bookName, setBookName] = useState<string>("");
+    const [bookName, setBookName] = useState<string>("");
 
-  useEffect(() => {
-    const fetchBookName = async () => {
-      try {
-        const response = await planServices.getbookname_by_id(record.book_id);
-        setBookName(response.data.book_title); 
-      } catch (error) {
-        console.error('Error fetching book name:', error); //這邊會跳error，但不影響
-      }
-    };
-    fetchBookName();
-  }, [record.book_id]);
+    useEffect(() => {
+        const fetchBookName = async () => {
+            try {
+                const response = await planServices.getbookname_by_id(record.book_id);
+                setBookName(response.data.book_title); 
+            } catch (error) {
+                console.error('Error fetching book name:', error); //這邊會跳error，但不影響
+            }
+        };
+        fetchBookName();
+    }, [record.book_id]);
 
-  let recordDate = record.expired_date;
-  let isCompleteString: string = record.is_complete ? 'True' : 'False';
+    let recordDate = record.expired_date;
+    let isCompleteString: string = record.is_complete ? 'True' : 'False';
 
-  return (
-    <ListItem index={index}>
-      <PlanId>{record.id}</PlanId>
-      <BookId>{bookName}</BookId>
-      <ExpiredDate>{recordDate.toString()}</ExpiredDate>
-      <IsComplete>{isCompleteString}</IsComplete>
-    </ListItem>
-  );
+    return (
+        <ListItem index={index}>
+            <PlanId>{record.id}</PlanId>
+            <BookId>{bookName}</BookId>
+            <ExpiredDate>{recordDate.toString()}</ExpiredDate>
+            <IsComplete>{isCompleteString}</IsComplete>
+        </ListItem>
+    );
 };
-    
-    
-  const ListItem = styled.div.attrs<{ index: number }>((props) => {
+
+const Container = styled.div`
+    width: 720px;
+    background-color: #f9f1e9;  // 復古風格的背景色
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: 'Georgia', serif;
+`;
+
+const ListItem = styled.div.attrs<{ index: number }>((props) => {
     return {
-      index: props.index
+        index: props.index
     };
-  })`
+})`
     display: flex; 
     flex-direction: row;
     padding: 15px 15px; 
     height: 20;
-    border-bottom: 1px solid gray;
-    border-width: 3;
-    background-color: ${(props) => props.index%2 ? "white": "lightgrey"};
+    border-bottom: 1px solid #c4a489;  // 復古風格的邊框色
+    background-color: ${(props) => props.index % 2 ? "#f5f5dc" : "#fffaf0"};  // 使用復古色調的背景色
     justify-content: space-between;
     align-items: center;
-  `
-    
-  const HeaderContainer = styled.div`
+`;
+
+const HeaderContainer = styled.div`
     display: flex; 
     flex-direction: row;
     padding: 10px 15px; 
     margin-top: 5px;
     margin-bottom: 5px;
     height: 20;
-    border-bottom: 1px solid gray;
-    background-color: lightblue;
+    border-bottom: 1px solid #c4a489;  // 復古風格的邊框色
+    background-color: #f2dcb2;  // 復古風格的背景色
     align-items: center;
     justify-content: space-between;
-  `
-  const listItemCommon = `  
+`;
+
+const listItemCommon = `  
     margin-left: 1px;
     margin-right: 1px;
-    //background-color: yellow;
     padding-inline: 1px;
     text-align: right;
-  `
-  
-const Index = styled.text`
-  ${listItemCommon}
-  text-align: left;
-  width: 10px; 
 `
+
 const PlanId = styled.text`
-  ${listItemCommon}
-  width: 80px; 
+    ${listItemCommon}
+    width: 80px; 
 `
+
 const BookId = styled.text`
-${listItemCommon}
-width: 110px; 
+    ${listItemCommon}
+    width: 110px; 
 `
+
 const ExpiredDate = styled.text`
-${listItemCommon}
-width: 140px; 
+    ${listItemCommon}
+    width: 140px; 
 `
+
 const IsComplete = styled.text`
-${listItemCommon}
-width: 120px; 
+    ${listItemCommon}
+    width: 120px; 
 `
 
-
-
- 
 export default ReadingPlan;
