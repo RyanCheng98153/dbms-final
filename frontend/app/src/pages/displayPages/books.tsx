@@ -248,7 +248,7 @@ const Books = () => {
   const ListHeader = () => {
     return (
       <HeaderContainer>
-        <Index>{'.'}</Index>
+        {/*<Index>{'.'}</Index>*/}
         {<BookId >{'id'}</BookId>}
         <BookIsbn>{'ISBN'}</BookIsbn>
         <BookTitle>{'book title'}</BookTitle>
@@ -274,7 +274,7 @@ const Books = () => {
     };
     return (
       <ListItem index={index}>
-        <Index>{index + 1}</Index>
+        {/*<Index>{index + 1}</Index>*/}
         {<BookId >{book.id}</BookId>}
         <BookIsbn>{book.isbn}</BookIsbn>
         <BookTitle>{book.title}</BookTitle>
@@ -319,6 +319,7 @@ const Books = () => {
 };
 
 
+// Books list styling
 const ListItem = styled.div.attrs<{ index: number }>((props) => {
   return {
     index: props.index
@@ -327,12 +328,15 @@ const ListItem = styled.div.attrs<{ index: number }>((props) => {
   display: flex; 
   flex-direction: row;
   padding: 15px 15px; 
-  height: 20;
-  border-bottom: 1px solid gray;
-  border-width: 3;
-  background-color: ${(props) => props.index % 2 ? "white" : "lightgrey"};
+  border-bottom: 1px solid #e0e0e0;
+  background-color: ${(props) => props.index % 2 ? "#f9f9f9" : "#ffffff"};
   justify-content: space-between;
   align-items: center;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
 `
 
 const HeaderContainer = styled.div`
@@ -341,9 +345,8 @@ const HeaderContainer = styled.div`
   padding: 10px 15px; 
   margin-top: 5px;
   margin-bottom: 5px;
-  height: 20;
-  border-bottom: 1px solid gray;
-  background-color: wheat;
+  border-bottom: 2px solid #e0e0e0;
+  background-color: #ffefcc;
   align-items: center;
   justify-content: space-between;
 `
@@ -351,121 +354,104 @@ const HeaderContainer = styled.div`
 const listItemCommon = `  
   margin-left: 1px;
   margin-right: 1px;
-  //background-color: yellow;
-  padding-inline: 1px;
   text-align: right;
 `
+
 const Operation = styled.text`
   ${listItemCommon}
   width: 70px;
 `;
+
 const Index = styled.text`
   ${listItemCommon}
   text-align: left;
   width: 20px; 
 `
+
 const BookId = styled.text`
   ${listItemCommon}
   width: 30px; 
 `
+
 const BookIsbn = styled.text`
   ${listItemCommon}
   width: 120px; 
 `
+
 const BookTitle = styled.text`
   ${listItemCommon}
   width: 120px; 
 `
+
 const BookAuthor = styled.text`
   ${listItemCommon}
   width: 70px; 
 `
+
 const BookPrice = styled.text`
   ${listItemCommon}
   width: 50px;
 `
+
 const BookCategory = styled.text`
   ${listItemCommon}
   width: 80px;
 `
+
 const BookEdition = styled.text`
   ${listItemCommon}
   width: 60px;
 `
+
 const CurrentPage = styled.text`
   ${listItemCommon}
   width: 100px;
 `
 
-const Favorite_Button = styled.button`
+// Buttons styling
+const ButtonCommon = `
   margin-left: 12px;
   margin-bottom: 3px;
   width: 70px;
-  background-color: green;
   color: white;
   border: none;
   cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+
   &:hover {
-    background-color: darkgreen;
+    filter: brightness(0.9);
   }
+`
+
+const Favorite_Button = styled.button`
+  ${ButtonCommon}
+  background-color: #28a745;
 `;
 
 const Delete_Button = styled.button`
-  margin-left: 12px;
-  margin-bottom: 3px;
-  width: 70px;
-  background-color: green;
-  color: white;
-  border: none;
-  cursor: pointer;
-  &:hover {
-    background-color: darkgreen;
-  }
+  ${ButtonCommon}
+  background-color: #dc3545;
 `;
 
 const Upload_Button = styled.button`
-  margin-left: 12px;
-  margin-bottom: 3px;
-  width: 70px;
-  background-color: green;
-  color: white;
-  border: none;
-  cursor: pointer;
-  &:hover {
-    background-color: darkgreen;
-  }
+  ${ButtonCommon}
+  background-color: #17a2b8;
 `;
 
 const Read_Button = styled.button`
-  margin-left: 12px;
-  margin-bottom: 3px;
-  width: 70px;
-  background-color: green;
-  color: white;
-  border: none;
-  cursor: pointer;
-  &:hover {
-    background-color: darkgreen;
-  }
+  ${ButtonCommon}
+  background-color: #ffc107;
 `;
 
 const Note_Button = styled.button`
-  margin-left: 12px;
-  margin-bottom: 3px;
-  width: 70px;
-  background-color: green;
-  color: white;
-  border: none;
-  cursor: pointer;
-  &:hover {
-    background-color: darkgreen;
-  }
+  ${ButtonCommon}
+  background-color: #007bff;
 `;
 
-//note css
-
+// Note Modal styling
 const Overlay = styled.div`
-text-align: left;
+  text-align: left;
   position: fixed;
   top: 0;
   left: 0;
@@ -480,14 +466,14 @@ text-align: left;
 
 const Modal = styled.div`
   background-color: white;
-   background-image: linear-gradient(to bottom, rgba(255, 192, 203, 0.5), rgba(173, 216, 230, 0.5));
+  background-image: linear-gradient(to bottom, rgba(255, 192, 203, 0.5), rgba(173, 216, 230, 0.5));
   padding: 20px;
   border-radius: 10px;
   width: 700px;
   height: 700px;
   max-width: 100%;
-  max-height: 80vh; /* 設定最大高度 */
-  overflow-y: auto; /* 使內容可以垂直滾動 */
+  max-height: 80vh;
+  overflow-y: auto;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 `;
 
@@ -521,37 +507,38 @@ const Textarea = styled.textarea`
 
 const Button = styled.button`
   background-color: #007BFF;
-   margin: 5px;
+  margin: 5px;
   color: white;
   padding: 10px 20px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s;
+
   &:hover {
     background-color: #0056b3;
   }
 `;
 
-
 const Card_item = styled.div`
   background: white;
   margin: 10px;
-  padding: 0px 10px 10px 20px;  /* 可以調整這個值來讓內容更靠近邊緣 */
+  padding: 10px 20px;  
   border-radius: 5px;
   width: 600px;
   max-width: 100%;
-  max-height: 80vh; /* 設定最大高度 */
-  overflow-y: auto; /* 使內容可以垂直滾動 */
+  max-height: 80vh;
+  overflow-y: auto;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   display: flex;
-  flex-direction: column; /* 確保內容是從上到下排列 */
-  align-items: flex-start; /* 使內容靠左對齊 */
-  justify-content: flex-start; /* 使內容靠上對齊 */
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
 `;
 
 const CardBody = styled.div`
-  padding: 0; /* 移除內邊距 */
-  margin: 0; /* 移除外邊距 */
+  padding: 0;
+  margin: 0;
   width: 100%;
 `;
 
