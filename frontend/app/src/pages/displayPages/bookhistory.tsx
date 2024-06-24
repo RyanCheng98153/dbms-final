@@ -5,49 +5,47 @@ import { useState, useEffect } from "react";
 import historyServices from "../../services/history-services";
 import planServices from "../../services/plan-services";
 
-interface IHistory{
-    id: number,
-    time_stamp: Date,
-    book_id: number,
-    bookpage: number,
-    note: string
+interface IHistory {
+  id: number,
+  time_stamp: Date,
+  book_id: number,
+  bookpage: number,
+  note: string
 }
 
 const BookHistory = () => {
-  const [history, setHstory] = useState<IHistory[]>([
-      {
-          id:0,
-          time_stamp: new Date(),
-          book_id:0,
-          bookpage:0,
-          note:"history test"
-      }
-    ])
+  const [history, setHistory] = useState<IHistory[]>([
+    {
+      id: 0,
+      time_stamp: new Date(),
+      book_id: 0,
+      bookpage: 0,
+      note: "history test"
+    }
+  ]);
 
-  React.useEffect( () => {
-
+  useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await historyServices.getHistory()
-        if(!response) {console.log('no data in response'); return;}
-        const responseHistory:IHistory[] = response.data    
-        setHstory(responseHistory)
+        const response = await historyServices.getHistory();
+        if (!response) { console.log('no data in response'); return; }
+        const responseHistory: IHistory[] = response.data;
+        setHistory(responseHistory);
       } catch (error) {
-        console.error('An error occurred while fetching data:', error )
+        console.error('An error occurred while fetching data:', error);
       }
-    }
-    fetchData()
-  }, [])
+    };
+    fetchData();
+  }, []);
 
   return (
-      <div>
-          <ListHeader/>
-          <List
-            // items={testHistory}
-            items={history}
-            renderItem={(item, index) => <BookHistoryItem record={item} index={index} />}
-          />
-      </div>
+    <Container>
+      <ListHeader />
+      <List
+        items={history}
+        renderItem={(item, index) => <BookHistoryItem record={item} index={index} />}
+      />
+    </Container>
   );
 };
 
@@ -60,12 +58,12 @@ const ListHeader = () => {
       <BookPage>{'已讀頁數'}</BookPage>
       <PageNote>{'筆記內容'}</PageNote>
     </HeaderContainer>
-  )
-}
-  
+  );
+};
+
 const BookHistoryItem = ({ record, index }: { record: IHistory, index: number }) => {
-  let recordDate = new Date(record.time_stamp)
-  let recordDateString = recordDate.getFullYear() + '/' + recordDate.getMonth() + '/' + recordDate.getDay()
+  let recordDate = new Date(record.time_stamp);
+  let recordDateString = `${recordDate.getFullYear()}/${recordDate.getMonth() + 1}/${recordDate.getDate()}`;
 
   const [bookName, setBookName] = useState<string>("");
 
@@ -73,9 +71,9 @@ const BookHistoryItem = ({ record, index }: { record: IHistory, index: number })
     const fetchBookName = async () => {
       try {
         const response = await planServices.getbookname_by_id(record.book_id);
-        setBookName(response.data.book_title); 
+        setBookName(response.data.book_title);
       } catch (error) {
-        console.error('Error fetching book name:', error); //這邊會跳error，但不影響
+        console.error('Error fetching book name:', error);
       }
     };
     fetchBookName();
@@ -86,78 +84,87 @@ const BookHistoryItem = ({ record, index }: { record: IHistory, index: number })
       <RecordId>{record.id}</RecordId>
       <RecordTime>{recordDateString}</RecordTime>
       <BookId>{bookName}</BookId>
-      <BookPage style={{}}>
-        <text>已讀 </text> 
-        <text style={{width:30, maxWidth:30, display:'inline-block'}}>{record.bookpage}</text>
-        <text> 頁</text>
+      <BookPage>
+        <Text>已讀 </Text>
+        <Text style={{ width: 30, maxWidth: 30, display: 'inline-block' }}>{record.bookpage}</Text>
+        <Text> 頁</Text>
       </BookPage>
       <PageNote>{record.note}</PageNote>
     </ListItem>
   );
-}
-  
-  
+};
+
+const Container = styled.div`
+  background-image: url('/path/to/your/illustration-background.jpg');
+  background-size: cover;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+`;
+
 const ListItem = styled.div.attrs<{ index: number }>((props) => {
   return {
     index: props.index
   };
 })`
-  display: flex; 
+  display: flex;
   flex-direction: row;
-  padding: 15px 15px; 
-  height: 20;
+  padding: 15px;
   border-bottom: 1px solid gray;
-  border-width: 3;
-  background-color: ${(props) => props.index%2 ? "white": "lightgrey"};
+  background-color: ${(props) => props.index % 2 ? "#f0f8ff" : "#e6e6fa"};
   justify-content: space-between;
   align-items: center;
-`
-  
+  font-family: 'Handwritten', sans-serif;
+`;
+
 const HeaderContainer = styled.div`
-  display: flex; 
+  display: flex;
   flex-direction: row;
-  padding: 10px 15px; 
+  padding: 10px;
   margin-top: 5px;
   margin-bottom: 5px;
-  height: 20;
   border-bottom: 1px solid gray;
-  background-color: lightblue;
+  background-color: #ffebcd;
   align-items: center;
   justify-content: space-between;
-`
-const listItemCommon = `  
+  font-family: 'Handwritten', sans-serif;
+`;
+
+const listItemCommon = `
   margin-left: 1px;
   margin-right: 1px;
-  // background-color: yellow;
   padding-inline: 1px;
   text-align: right;
-`
+`;
 
-const Index = styled.text`
+const RecordId = styled.div`
   ${listItemCommon}
   text-align: left;
-  width: 10px; 
-`
-const RecordId = styled.text`
-  ${listItemCommon}
-  width: 20px; 
-`
-const RecordTime = styled.text`
-  ${listItemCommon}
-  width: 80px; 
-`
-const BookId = styled.text`
-  ${listItemCommon}
-  width: 130px; 
-`
-const BookPage = styled.text`
-  ${listItemCommon}
-  width: 100px; 
-`
-const PageNote = styled.text`
-  ${listItemCommon}
-  width: 100px; 
-`
+  width: 20px;
+`;
 
- 
+const RecordTime = styled.div`
+  ${listItemCommon}
+  width: 80px;
+`;
+
+const BookId = styled.div`
+  ${listItemCommon}
+  width: 130px;
+`;
+
+const BookPage = styled.div`
+  ${listItemCommon}
+  width: 100px;
+`;
+
+const PageNote = styled.div`
+  ${listItemCommon}
+  width: 100px;
+`;
+
+const Text = styled.span`
+  font-family: 'Handwritten', sans-serif;
+`;
+
 export default BookHistory;
