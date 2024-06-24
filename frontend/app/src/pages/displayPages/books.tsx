@@ -21,7 +21,7 @@ interface IBook {
   book_title: string,
   author: string,
   price: number,
-  category: number,
+  category: string,
   edition: number,
   current_page: number,
 }
