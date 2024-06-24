@@ -8,14 +8,6 @@ interface bookProp {
   title:string,
 }
 
-const testBooks:bookProp[] = [
-  {
-    id: 1,
-    book_id:1,
-    title: '麥田捕手',
-  }
-]
-
 interface IBook{
   id: number
   book_id:number
@@ -100,18 +92,25 @@ const Books = () => {
 
 
   return (
-    <div>
-        <ListHeader/>
-        <List
-          // items={testBooks}
-          items={books}
-          renderItem={bookRecord}
-        />
-    </div>
+    <Container>
+      <ListHeader/>
+      <List
+        items={books}
+        renderItem={bookRecord}
+      />
+    </Container>
   );
 };
 
-
+const Container = styled.div`
+  width: 720px;
+  background-color: #f4e9d8;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: 'Georgia', serif;
+`;
+// Books list styling
 const ListItem = styled.div.attrs<{ index: number }>((props) => {
   return {
     index: props.index
@@ -120,14 +119,15 @@ const ListItem = styled.div.attrs<{ index: number }>((props) => {
   display: flex; 
   flex-direction: row;
   padding: 15px 15px; 
-  // margin-top: 5px;
-  // margin-bottom: 5px;
-  height: 20;
-  border-bottom: 1px solid gray;
-  border-width: 3;
-  background-color: ${(props) => props.index%2 ? "white": "lightgrey"};
+  border-bottom: 1px solid #D3B8AE;  // 使用復古色調的邊框
+  background-color: ${(props) => props.index % 2 ? "#f5f5dc" : "#fffaf0"};  // 使用復古色調的背景色
   justify-content: space-between;
   align-items: center;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #FFEFD5;  // 使用復古色調的懸停效果
+  }
 `
 
 const HeaderContainer = styled.div`
@@ -136,18 +136,17 @@ const HeaderContainer = styled.div`
   padding: 10px 15px; 
   margin-top: 5px;
   margin-bottom: 5px;
-  height: 20;
-  border-bottom: 1px solid gray;
-  background-color: wheat;
+  border-bottom: 2px solid #D3B8AE;
+  background-color: #DEB887;  // 使用復古色調的背景色
   align-items: center;
   justify-content: space-between;
 `
+
 const listItemCommon = `  
   margin-left: 1px;
   margin-right: 1px;
-  //background-color: yellow;
-  padding-inline: 1px;
   text-align: right;
+  color: #8B4513;  // 使用復古色調的文本顏色
 `
 
 const Index = styled.text`
