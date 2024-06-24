@@ -3,31 +3,15 @@ import styled from "styled-components";
 import List from "../../components/list";
 import { useState, useEffect } from "react";
 import historyServices from "../../services/history-services";
+import bookServices from "../../services/book-services";
 
 interface bookHistoryProp {
   id:number,
   time_stamp:Date, 
-  book_id:number,
+  book_title:string,
   book_page:number,
   note:string
 }
-
-const testHistory:bookHistoryProp[] = [
-    {
-        id:1,
-        time_stamp: new Date( new Date( "2024-5-31" ).toISOString() ),
-        book_id: 9789867412,
-        book_page: 50,
-        note: 'This is the book'
-    },
-    {
-        id:2,
-        time_stamp: new Date( new Date( "2024-6-2" ).toISOString() ),
-        book_id: 9789578626,
-        book_page: 75,
-        note: 'string1'
-    },
-]
 
 interface IHistory{
     id: number,
@@ -37,57 +21,104 @@ interface IHistory{
     note: string
 }
 
+interface IBook {
+  id: number
+  ISBN: number,
+  book_title: string,
+  author: string,
+  price: number,
+  category: string,
+  edition: number,
+  current_page: number,
+}
+
 const BookHistory = () => {
-    // const [press, setPress] = useState<boolean>(false)
-    const [history, setHstory] = useState<bookHistoryProp[]>([
-        {
-            id:0,
-            time_stamp: new Date(),
-            book_id:100000000,
-            book_page:0,
-            note:"history test"
-        }
-      ])
+  const [history, setHstory] = useState<bookHistoryProp[]>([
+      {
+          id:0,
+          time_stamp: new Date(),
+          book_title:'title',
+          book_page:0,
+          note:"history test"
+      }
+    ])
 
-      React.useEffect( () => {
-        const fetchData = async () => {
-          try {
-            // console.log('fetched')
-            const response = await historyServices.getHistory()
-            if(!response) {console.log('no data in response'); return;}
-            // console.log('response')
-            // console.log(response.data[0])
-            
-            const responseHistory:bookHistoryProp[] = response.data.map(
-              ( item:IHistory ) => {
-                return {
-                    id: item.id,
-                    time_stamp: new Date(item.time_stamp),
-                    book_id: item.book_id,
-                    book_page: item.bookpage,
-                    note: item.note,
-                }
-              }
-            )
-            
-            setHstory(responseHistory)
-          } catch (error) {
-            console.error('An error occurred while fetching data:', error )
+  const [books, setBooks] = useState<IBook[]>([
+    {
+      id: 0,
+      ISBN: 100000000,
+      book_title: '測試 & test',
+      author: 'robot',
+      price: 0,
+      category: '測試書籍',
+      edition: 0,
+      current_page: 0
+    }
+  ])
+
+  const [press, setPress] = useState<boolean> (false)
+  
+  useEffect(() => {
+    const fetchBook = async () => {
+      try {
+        // console.log('fetched')
+        const response = await bookServices.getBooks()
+        if (!response) { console.log('no data in response'); return; }
+        const responseBooks: IBook[] = response.data.map( (item:IBook) => item )
+        setBooks(responseBooks)
+      } catch (error) {
+        console.error('An error occurred while fetching data:', error)
+      }
+    }
+
+    const fetchData = async () => {
+      fetchBook()
+      
+      try {
+        const response = await historyServices.getHistory()
+        if(!response) {console.log('no data in response'); return;}
+        
+        const responseHistory:bookHistoryProp[] = response.data.map(
+          ( item:IHistory ) => {
+            const findBook = books.filter((book) => book.id == item.book_id );
+            console.log('findbook')
+            // console.log(findBook)
+            console.log(item.book_id)
+            console.log(findBook[0].book_title)
+            //console.log(books)
+            return {
+                id: item.id,
+                time_stamp: new Date(item.time_stamp),
+                book_title: findBook[0].book_title,
+                book_page: item.bookpage,
+                note: item.note,
+            }
           }
-        }
-        fetchData()
-      }, [])
+        )
+        
+        setHstory(responseHistory)
+      } catch (error) {
+        console.error('An error occurred while fetching data:', error )
+      }
+    }
+    fetchData()
+  }, [press])
 
-    return (
-        <div>
-            <ListHeader/>
-            <List
-              // items={testHistory}
-              items={history}
-              renderItem={BookHistoryItem}
-            />
-        </div>
-    );
+  return (
+      <div>
+          <button
+            onClick={ () => setPress(!press) }
+          >
+            reload
+          </button>
+          <ListHeader/>
+          <List
+            // items={testHistory}
+            items={history}
+            renderItem={BookHistoryItem}
+          />
+      </div>
+  );
 };
 
 const ListHeader = () => {
@@ -111,7 +142,7 @@ const BookHistoryItem = (record:bookHistoryProp, index:number) => {
       <Index>{ index+1 }</Index>
       <RecordId>{record.id}</RecordId>
       <RecordTime>{recordDateString}</RecordTime>
-      <BookId>{record.book_id}</BookId>
+      <BookId>{record.book_title}</BookId>
       <BookPage>{record.book_page}</BookPage>
       <PageNote>{record.note}</PageNote>
     </ListItem>
