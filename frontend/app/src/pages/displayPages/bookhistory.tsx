@@ -13,17 +13,6 @@ interface IHistory{
     note: string
 }
 
-interface IBook {
-  id: number
-  ISBN: number,
-  book_title: string,
-  author: string,
-  price: number,
-  category: string,
-  edition: number,
-  current_page: number,
-}
-
 const BookHistory = () => {
   const [history, setHstory] = useState<IHistory[]>([
       {
@@ -65,12 +54,11 @@ const BookHistory = () => {
 const ListHeader = () => {
   return (
     <HeaderContainer>
-      <Index>{'.'}</Index>
-      <RecordId>{'record_No'}</RecordId>
-      <RecordTime>{'time_stamp'}</RecordTime>
-      <BookId>{'book_id'}</BookId>
-      <BookPage>{'bookpage'}</BookPage>
-      <PageNote>{'note'}</PageNote>
+      <RecordId>{'No.'}</RecordId>
+      <RecordTime>{'閱讀日期'}</RecordTime>
+      <BookId>{'書籍名稱'}</BookId>
+      <BookPage>{'已讀頁數'}</BookPage>
+      <PageNote>{'筆記內容'}</PageNote>
     </HeaderContainer>
   )
 }
@@ -95,11 +83,14 @@ const BookHistoryItem = ({ record, index }: { record: IHistory, index: number })
 
   return (
     <ListItem index={index}>
-      <Index>{ index+1 }</Index>
       <RecordId>{record.id}</RecordId>
       <RecordTime>{recordDateString}</RecordTime>
       <BookId>{bookName}</BookId>
-      <BookPage>{record.bookpage}</BookPage>
+      <BookPage style={{}}>
+        <text>已讀 </text> 
+        <text style={{width:30, maxWidth:30, display:'inline-block'}}>{record.bookpage}</text>
+        <text> 頁</text>
+      </BookPage>
       <PageNote>{record.note}</PageNote>
     </ListItem>
   );
@@ -149,23 +140,23 @@ const Index = styled.text`
 `
 const RecordId = styled.text`
   ${listItemCommon}
-  width: 80px; 
+  width: 20px; 
 `
 const RecordTime = styled.text`
   ${listItemCommon}
-  width: 100px; 
+  width: 80px; 
 `
 const BookId = styled.text`
   ${listItemCommon}
-  width: 110px; 
+  width: 130px; 
 `
 const BookPage = styled.text`
   ${listItemCommon}
-  width: 90px; 
+  width: 100px; 
 `
 const PageNote = styled.text`
   ${listItemCommon}
-  width: 250px; 
+  width: 100px; 
 `
 
  
