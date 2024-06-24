@@ -35,19 +35,6 @@ const BookHistory = () => {
       }
     ])
 
-  const [books, setBooks] = useState<IBook[]>([
-    {
-      id: 0,
-      ISBN: 100000000,
-      book_title: '測試 & test',
-      author: 'robot',
-      price: 0,
-      category: '測試書籍',
-      edition: 0,
-      current_page: 0
-    }
-  ])
-
   React.useEffect( () => {
 
     const fetchData = async () => {
