@@ -3,15 +3,7 @@ import styled from "styled-components";
 import List from "../../components/list";
 import { useState, useEffect } from "react";
 import historyServices from "../../services/history-services";
-import bookServices from "../../services/book-services";
-
-interface bookHistoryProp {
-  id:number,
-  time_stamp:Date, 
-  book_title:string,
-  book_page:number,
-  note:string
-}
+import planServices from "../../services/plan-services";
 
 interface IHistory{
     id: number,
@@ -33,12 +25,12 @@ interface IBook {
 }
 
 const BookHistory = () => {
-  const [history, setHstory] = useState<bookHistoryProp[]>([
+  const [history, setHstory] = useState<IHistory[]>([
       {
           id:0,
           time_stamp: new Date(),
-          book_title:'title',
-          book_page:0,
+          book_id:0,
+          bookpage:0,
           note:"history test"
       }
     ])
@@ -56,66 +48,28 @@ const BookHistory = () => {
     }
   ])
 
-  const [press, setPress] = useState<boolean> (false)
-  
-  useEffect(() => {
-    const fetchBook = async () => {
-      try {
-        // console.log('fetched')
-        const response = await bookServices.getBooks()
-        if (!response) { console.log('no data in response'); return; }
-        const responseBooks: IBook[] = response.data.map( (item:IBook) => item )
-        setBooks(responseBooks)
-      } catch (error) {
-        console.error('An error occurred while fetching data:', error)
-      }
-    }
+  React.useEffect( () => {
 
     const fetchData = async () => {
-      fetchBook()
-      
       try {
         const response = await historyServices.getHistory()
         if(!response) {console.log('no data in response'); return;}
-        
-        const responseHistory:bookHistoryProp[] = response.data.map(
-          ( item:IHistory ) => {
-            const findBook = books.filter((book) => book.id == item.book_id );
-            console.log('findbook')
-            // console.log(findBook)
-            console.log(item.book_id)
-            console.log(findBook[0].book_title)
-            //console.log(books)
-            return {
-                id: item.id,
-                time_stamp: new Date(item.time_stamp),
-                book_title: findBook[0].book_title,
-                book_page: item.bookpage,
-                note: item.note,
-            }
-          }
-        )
-        
+        const responseHistory:IHistory[] = response.data    
         setHstory(responseHistory)
       } catch (error) {
         console.error('An error occurred while fetching data:', error )
       }
     }
     fetchData()
-  }, [press])
+  }, [])
 
   return (
       <div>
-          <button
-            onClick={ () => setPress(!press) }
-          >
-            reload
-          </button>
           <ListHeader/>
           <List
             // items={testHistory}
             items={history}
-            renderItem={BookHistoryItem}
+            renderItem={(item, index) => <BookHistoryItem record={item} index={index} />}
           />
       </div>
   );
@@ -134,16 +88,31 @@ const ListHeader = () => {
   )
 }
   
-const BookHistoryItem = (record:bookHistoryProp, index:number) => {
-  let recordDate = record.time_stamp
+const BookHistoryItem = ({ record, index }: { record: IHistory, index: number }) => {
+  let recordDate = new Date(record.time_stamp)
   let recordDateString = recordDate.getFullYear() + '/' + recordDate.getMonth() + '/' + recordDate.getDay()
+
+  const [bookName, setBookName] = useState<string>("");
+
+  useEffect(() => {
+    const fetchBookName = async () => {
+      try {
+        const response = await planServices.getbookname_by_id(record.book_id);
+        setBookName(response.data.book_title); 
+      } catch (error) {
+        console.error('Error fetching book name:', error); //這邊會跳error，但不影響
+      }
+    };
+    fetchBookName();
+  }, [record.book_id]);
+
   return (
     <ListItem index={index}>
       <Index>{ index+1 }</Index>
       <RecordId>{record.id}</RecordId>
       <RecordTime>{recordDateString}</RecordTime>
-      <BookId>{record.book_title}</BookId>
-      <BookPage>{record.book_page}</BookPage>
+      <BookId>{bookName}</BookId>
+      <BookPage>{record.bookpage}</BookPage>
       <PageNote>{record.note}</PageNote>
     </ListItem>
   );
