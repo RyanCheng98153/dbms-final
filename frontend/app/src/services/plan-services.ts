@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API_URL = "http://192.168.0.0.1:5000n"
+const API_URL = 'http://127.0.0.1:5000'
 
 class PlanService {
     /*
@@ -16,12 +16,12 @@ class PlanService {
 
     async addPlan (
         bookId: number,
-        expiredDate: Date,
+        expiredDate: string,
         finished: boolean
     ) {
         return await axios.post(`${API_URL}/add_plan`,
             {
-                book_Id: bookId,
+                book_id: bookId,
                 expired_date: expiredDate,
                 is_complete: finished
             }
@@ -38,6 +38,13 @@ class PlanService {
             }
         })
     }
-}
+    async getbookname_by_id(bookId: number){
+        console.log("this_is_return:",await axios.get(`${API_URL}/search_book/${bookId}`));
+        return await axios.get(`${API_URL}/search_book/${bookId}`);
+    }
+    
+    async search_id_by_book_title(book_title:string){
+        return await axios.get(`${API_URL}/search_id_by_book_title/${book_title}`);
+    }
 
-export default new PlanService
+}export default new PlanService()
