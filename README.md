@@ -1,6 +1,6 @@
 # DBMS Final-Book Management System
 
-## 專案說明
+# 專案說明
 
 This project is a comprehensive Book Management System designed to streamline the management of a personal book collection, including books, reading history, and reading plans. Built with Flask for the backend and SQLite for the database, the system is equipped with a range of features to enhance user experience and Book Management operations. The frontend is developed using React, providing a responsive and interactive user interface.
 
@@ -14,9 +14,9 @@ Key Features:
 
 4:Author Information Management: Update author details, including name, biography, nationality, and birth year, ensuring that the author database is always current.
 
-5:PDF Upload and Reading: Upload and store PDF versions of books within the system. Users can also read these PDFs directly through an integrated PDF viewer, enhancing the reading experience.This project is a comprehensive Book Management System designed to streamline the management of a personal book collection, including books, reading history, and reading plans. Built with Flask for the backend and SQLite for the database, the system is equipped with a range of features to enhance user experience and Book Management operations. 
+5:PDF Upload and Reading: Upload and store PDF versions of books within the system. Users can also read these PDFs directly through an integrated PDF viewer, enhancing the reading experience.
 
-## **Database Schema**
+# **Database Schema**
 
 The database contains the following tables:
 
@@ -88,7 +88,7 @@ To enhance the performance of the Library Management System, several indexes hav
     - `CREATE INDEX IF NOT EXISTS idx_favorite_list_book_id ON FavoriteList (book_id)`
 
 
-## **Backend Features**
+# **Backend Features**
 
 ### **Book Management**
 
