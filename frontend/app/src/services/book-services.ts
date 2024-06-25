@@ -27,7 +27,7 @@ class BookService {
 
   async addBooks(
     //jwt_token: string,
-    ISBN: string,
+    ISBN: number,
     book_title: string,
     author: string,
     price: number,
@@ -50,18 +50,10 @@ class BookService {
     )
   }
   // 新增刪除書籍的方法
-  async deleteBook(
-    bookId: string
-  ) {
-    // 進行 HTTP DELETE 請求來刪除特定書籍
-    return axios.delete(
-      API_URL + `/delete_data`,{
-        data:{
-          table: '書籍',
-          id: bookId
-        }
-      })
+  async deletebook(bookId: number) {
+    return await axios.delete(`${API_URL}/delete_book/${bookId}`);
   }
+
   async uploadPDF (formData:FormData) {
     return axios.post(API_URL +'/upload_pdf', formData, {
       headers: {
@@ -104,6 +96,9 @@ class BookService {
       console.error('Error update note:', error);
       throw error;
     }
+  }
+  async getBookWithId(book_id:number) {
+    return await axios.get(`${API_URL}/search_book/${book_id}`)
   }
 }
 

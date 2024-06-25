@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useState, useEffect, useRef } from "react";
 import bookServices from "../../services/book-services";
 import favoriteServices from "../../services/favorite-services";
+import authorServices from "../../services/author-services";
 
 interface bookProp {
   id: number,
@@ -219,7 +220,7 @@ const NOTE_display: React.FC<NOTE_displayProps> = ({ bookId, booktitle }) => {
   const handleOpenModal = () => {
     setIsModalOpen(true);
   };
-
+  
   // 關閉模態框
   const handleCloseModal = () => {
     setIsModalOpen(false);
@@ -249,6 +250,94 @@ const NOTE_display: React.FC<NOTE_displayProps> = ({ bookId, booktitle }) => {
     </div>
   );
 };
+
+interface AuthorInfoDialogProps {
+  authorInfo: {
+    author_id: number;
+    author_name: string;
+    introduction: string;
+    nationality: string;
+    Birth_year: string;
+  } | null;
+  author_onClose: () => void;
+}
+
+const AuthorInfoDialog: React.FC<AuthorInfoDialogProps> = ({ authorInfo, author_onClose }) => {
+  const [authorName, setAuthorName] = useState("");
+  const [introduction, setIntroduction] = useState("");
+  const [nationality, setNationality] = useState("");
+  const [birthYear, setBirthYear] = useState("");
+
+  useEffect(() => {
+    if (authorInfo) {
+      setAuthorName(authorInfo.author_name);
+      setIntroduction(authorInfo.introduction);
+      setNationality(authorInfo.nationality);
+      setBirthYear(authorInfo.Birth_year);
+    }
+  }, [authorInfo]);
+  const handleUpdate = async () => {
+    if (!authorInfo) return;
+    try {
+      console.log( authorInfo.author_id, 
+        authorName, 
+        introduction, 
+        nationality, 
+        parseInt(birthYear))
+      await authorServices.updateAuthorInfo(
+        authorInfo.author_id, 
+        authorName, 
+        introduction, 
+        nationality, 
+        parseInt(birthYear)
+      );
+      alert('Author information updated successfully');
+      //author_onClose();
+    } catch (error) {
+      console.error('Failed to update author information:', error);
+      alert('Failed to update author information');
+    }
+  };
+  if (!authorInfo) {
+    return null; // 或者顯示一個加載中的指示
+  }
+
+  return (
+    <DialogOverlay>
+      <Dialog>
+        <Author_CLOSEBUTTON onClick={author_onClose}>&times;</Author_CLOSEBUTTON>
+        <h2>更新作者資訊</h2>
+        <Author_Form>
+          <Label>作者姓名:</Label>
+          <Input 
+            type="text" 
+            value={authorName} 
+            onChange={(e) => setAuthorName(e.target.value)} 
+          />
+          <Label>簡介:</Label>
+          <Textarea 
+            value={introduction} 
+            onChange={(e) => setIntroduction(e.target.value)} 
+          />
+          <Label>國籍:</Label>
+          <Input 
+            type="text" 
+            value={nationality} 
+            onChange={(e) => setNationality(e.target.value)} 
+          />
+          <Label>出生年:</Label>
+          <Input 
+            type="text" 
+            value={birthYear} 
+            onChange={(e) => setBirthYear(e.target.value)} 
+          />
+          <Author_UpdateButton onClick={handleUpdate}>更新</Author_UpdateButton>
+        </Author_Form>
+      </Dialog>
+    </DialogOverlay>
+  );
+};
+
 const Books = () => {
 
   // 定義一個 React 函數式組件 App
@@ -268,9 +357,20 @@ const Books = () => {
   const handleDelete = async (bookId: number) => {
     const isConfirmed = window.confirm("確定要將這本書從書籍中移除嗎？");
     if (!isConfirmed) return;
-    await bookServices.deleteBook(bookId.toString());
-    setBooks(books.filter(book => book.id !== bookId));
-  }
+
+    try {
+        const response = await bookServices.deletebook(bookId);
+        if (response.status === 200) {
+            alert("書籍刪除成功");
+            // 更新前端顯示數據
+            setBooks(books.filter(book => book.id !== bookId));
+        } else {
+            alert("書籍ID不存在");
+        }
+    } catch (error) {
+      setBooks(books.filter(book => book.id !== bookId));
+    }
+};
   const handleUploadPDF = async (event: React.ChangeEvent<HTMLInputElement>, bookId: number) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -300,12 +400,38 @@ const Books = () => {
       current_page: 0
     }
   ])
+  const [authorInfo, setAuthorInfo] = useState<{
+    author_id: number;
+    author_name: string;
+    introduction: string;
+    nationality: string;
+    Birth_year: string;
+  } | null>(null);
+
+   const [isAuthorDialogOpen, setIsAuthorDialogOpen] = useState(false);
+
+   const handleupload_Author = async (author: string) => {
+    try {
+      const authorData = await authorServices.getAuthorInfo(author);
+      console.log("authorData:",authorData)
+      setAuthorInfo(authorData.data);
+      setIsAuthorDialogOpen(true);
+    } catch (error) {
+      console.error('Failed to fetch author info', error);
+    }
+  };
+   const closeAuthorDialog = () => {
+    setIsAuthorDialogOpen(false);
+    setAuthorInfo(null);
+  };
+
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // console.log('fetched')
         const response = await bookServices.getBooks()
+        console.log("bookServices.getBooks():",response)
         if (!response) { console.log('no data in response'); return; }
         const responseBooks: bookProp[] = response.data.map(
           (item: IBook) => {
@@ -332,7 +458,7 @@ const Books = () => {
   const ListHeader = () => {
     return (
       <HeaderContainer>
-        <Index>{'.'}</Index>
+        {/*<Index>{'.'}</Index>*/}
         {<BookId >{'id'}</BookId>}
         <BookIsbn>{'ISBN'}</BookIsbn>
         <BookTitle>{'book title'}</BookTitle>
@@ -358,11 +484,11 @@ const Books = () => {
     };
     return (
       <ListItem index={index}>
-        <Index>{index + 1}</Index>
+        {/*<Index>{index + 1}</Index>*/}
         {<BookId >{book.id}</BookId>}
         <BookIsbn>{book.isbn}</BookIsbn>
         <BookTitle>{book.title}</BookTitle>
-        <BookAuthor>{book.author}</BookAuthor>
+        <Author_Button onClick={()=>handleupload_Author(book.author)}>{book.author}</Author_Button>
         <BookPrice>{book.price}</BookPrice>
         <BookCategory>{book.category}</BookCategory>
         {
@@ -398,6 +524,9 @@ const Books = () => {
         items={books}
         renderItem={bookRecord}
       />
+       {isAuthorDialogOpen && (
+        <AuthorInfoDialog authorInfo={authorInfo} author_onClose={closeAuthorDialog} />
+      )}
     </div>
   );
 };
@@ -408,36 +537,37 @@ const ListItem = styled.div.attrs<{ index: number }>((props) => {
     index: props.index
   };
 })`
-  display: flex; 
+ display: flex; 
   flex-direction: row;
   padding: 15px 15px; 
-  height: 20;
-  border-bottom: 1px solid gray;
-  border-width: 3;
-  background-color: ${(props) => props.index % 2 ? "white" : "lightgrey"};
+  border-bottom: 1px solid #D3B8AE;  // 使用復古色調的邊框
+  background-color: ${(props) => props.index % 2 ? "#f5f5dc" : "#fffaf0"};  // 使用復古色調的背景色
   justify-content: space-between;
   align-items: center;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #FFEFD5;  // 使用復古色調的懸停效果
+  }
 `
 
 const HeaderContainer = styled.div`
-  display: flex; 
+   display: flex; 
   flex-direction: row;
   padding: 10px 15px; 
   margin-top: 5px;
   margin-bottom: 5px;
-  height: 20;
-  border-bottom: 1px solid gray;
-  background-color: wheat;
+  border-bottom: 2px solid #D3B8AE;
+  background-color: #DEB887;  // 使用復古色調的背景色
   align-items: center;
   justify-content: space-between;
 `
 
 const listItemCommon = `  
-  margin-left: 1px;
+ margin-left: 1px;
   margin-right: 1px;
-  //background-color: yellow;
-  padding-inline: 1px;
   text-align: right;
+  color: #8B4513;  // 使用復古色調的文本顏色
 `
 const Operation = styled.text`
   ${listItemCommon}
@@ -498,12 +628,12 @@ const Delete_Button = styled.button`
   margin-left: 12px;
   margin-bottom: 3px;
   width: 70px;
-  background-color: green;
+  background-color: red;
   color: white;
   border: none;
   cursor: pointer;
   &:hover {
-    background-color: darkgreen;
+    background-color: darkred;
   }
 `;
 
@@ -511,25 +641,25 @@ const Upload_Button = styled.button`
   margin-left: 12px;
   margin-bottom: 3px;
   width: 70px;
-  background-color: green;
+  background-color:  RGB(32,120,209);
   color: white;
   border: none;
   cursor: pointer;
   &:hover {
-    background-color: darkgreen;
+    background-color: darkblue;
   }
 `;
 
 const Read_Button = styled.button`
-  margin-left: 12px;
+  margin-left: 12px;  
   margin-bottom: 3px;
   width: 70px;
-  background-color: green;
+  background-color: RGB(32,120,209);
   color: white;
   border: none;
   cursor: pointer;
   &:hover {
-    background-color: darkgreen;
+    background-color: darkblue;
   }
 `;
 
@@ -545,6 +675,7 @@ const Note_Button = styled.button`
     background-color: darkgreen;
   }
 `;
+
 
 //note css
 
@@ -646,4 +777,90 @@ const CardItem = styled.div`
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
+
+
+const Author_Button = styled.button`
+  margin-left: 12px;
+  margin-bottom: 3px;
+  width: 70px;
+  background-color: green;
+  color: white;
+  border: none;
+  cursor: pointer;
+  &:hover {
+    background-color: darkgreen;
+  }
+`;
+
+const DialogOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+`;
+
+const Dialog = styled.div`
+ background-color: white;
+   background-image: linear-gradient(to bottom, rgba(255, 192, 203, 0.5), rgba(173, 216, 230, 0.5));
+  padding: 20px;
+  border-radius: 5px;
+  max-width: 500px;
+  height: 500px;
+  width: 90%;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+   position: relative;
+`;
+const Author_CLOSEBUTTON = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+`;
+
+
+const Author_Form = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const Author_Label = styled.label`
+  margin-top: 10px;
+  font-weight: bold;
+`;
+
+const Author_Input = styled.input`
+  padding: 5px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+`;
+
+const Author_Textarea = styled.textarea`
+  padding: 5px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+`;
+
+const Author_UpdateButton = styled.button`
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
 export default Books;

@@ -130,7 +130,7 @@ const DeleteData = () => {
     const handleDelete = async () => {
         try {
             if (deleteType === "book") {
-                const response = await bookServices.deleteBook(inputValue);
+                const response = await bookServices.deletebook(parseInt(inputValue));
                 if (response.status === 200) {
                     alert("書籍刪除成功");
                     // 更新前端顯示數據

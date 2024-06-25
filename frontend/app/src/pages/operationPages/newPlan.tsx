@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import styled from "styled-components";
 import "react-datepicker/dist/react-datepicker.css";
+import PlanService from  "../../services/plan-services"
+import planServices from "../../services/plan-services";
 
 interface Plan {
     bookId: number;
@@ -32,22 +34,28 @@ const NewPlan = () => {
         if (date === null) return;
         setPlan({ ...plan, date }); 
     };
+    const formatDate = (date: Date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // 月份從0開始，所以加1
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      };
 
-    const handlePlanSubmit = () => {
+    const handlePlanSubmit = async() => {
         const newPlan: Plan = {
             bookId: parseInt(plan.bookId),
             date: plan.date,
             finished: plan.finished,
         };
-
+        await PlanService.addPlan(parseInt(plan.bookId),formatDate(plan.date),plan.finished);
         setPlanList([...planList, newPlan]);
         setPlan(initialPlanState);
     };
-
     return (
+        <Container>
         <div>
-            <h2>新增計畫</h2>
-            <input
+            <Title>新增閱讀計畫</Title>
+            <Plan_input 
                 name="bookId"
                 value={plan.bookId}
                 onChange={handlePlanInputChange}
@@ -60,7 +68,7 @@ const NewPlan = () => {
             />
             <div>
                 <label> {/*是否完成*/ }
-                    <input
+                    <Plan_input
                         type="checkbox"
                         checked={plan.finished}
                         onChange={handleCheckboxChange}
@@ -69,15 +77,43 @@ const NewPlan = () => {
                 </label>
             </div>
             <button onClick={handlePlanSubmit}>提交</button>
-            <ul>
-                {planList.map((plan, index) => (
-                    <li key={index}>
-                        {`ID: ${plan.bookId}, 日期: ${plan.date.toDateString()}, 完成: ${plan.finished}`}
-                    </li>
-                ))}
-            </ul>
         </div>
+        </Container>
     );
 };
 
 export default NewPlan;
+
+const Container = styled.div`
+    max-width: 600px;
+    margin: 50px auto;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    padding: 40px;
+    padding-top: 20px;
+    border-radius: 20px;
+    background: #f0f0e0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+    color: #333;
+`;
+
+const Title = styled.h2`
+    margin-bottom: 30px;
+    color: #333;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+`;
+
+
+const Plan_input = styled.input`
+    width:200px
+    padding:5px
+    margin : 30px;
+    color: #333;
+    //text-align: center;
+    //font-size: 24px;
+    //font-weight: bold;
+`;
+
