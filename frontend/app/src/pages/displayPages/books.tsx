@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useState, useEffect, useRef } from "react";
 import bookServices from "../../services/book-services";
 import favoriteServices from "../../services/favorite-services";
-import authorServices from "../../services/author-services";
+import authorServices from "../../services/author-services"
 
 interface bookProp {
   id: number,
