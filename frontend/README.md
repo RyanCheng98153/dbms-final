@@ -9,12 +9,15 @@ Hope you enjoy it and have a great day :blush:
 
 ### Package Installation
 Install the Node.js packages
+- ```npm install -g npm@latest```
 - ```npm install```
+- ```npm install axios```
 it will install the the following dependency module
 - react-router-dom
 - styled-components
 - react-icons
 - react Date-Picker
+- axios
 
 ### Quick Start
 Run the app in localhost 
