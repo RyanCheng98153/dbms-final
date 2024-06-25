@@ -78,7 +78,7 @@ const NewBook = () => {
             
             // 呼叫 BookService 的 addBooks 方法
             await bookServices.addBooks(
-                newBook.isbn.toString(),
+                newBook.isbn,
                 newBook.title,
                 newBook.author,
                 newBook.price,
