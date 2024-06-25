@@ -143,7 +143,7 @@ const NewBookmark: React.FC = () => {
 
       // 呼叫 BookService 的 addBooks 方法
       await historyServices.addHistory(
-          newHistory.book_id,
+          newHistory.book_id.toString(),
           newHistory.book_page,
           newHistory.note
       );

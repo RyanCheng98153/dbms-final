@@ -26,7 +26,7 @@ class HistoryService {
     
     async addHistory(
         //jwt_token: string,
-        book_id: number,
+        book_id: string,
         book_page: number,
         note: string,
       ) {
