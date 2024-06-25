@@ -54,8 +54,13 @@ const NewPlan = () => {
     return (
         <Container>
         <div>
+<<<<<<< HEAD
             <Title>新增閱讀計畫</Title>
             <Plan_input 
+=======
+            <Title>新增計畫</Title>
+            <input
+>>>>>>> a89cb47486bec4bb0e07d516e86338075fb8790a
                 name="bookId"
                 value={plan.bookId}
                 onChange={handlePlanInputChange}
@@ -104,6 +109,7 @@ const Title = styled.h2`
     text-align: center;
     font-size: 24px;
     font-weight: bold;
+<<<<<<< HEAD
 `;
 
 
@@ -117,3 +123,6 @@ const Plan_input = styled.input`
     //font-weight: bold;
 `;
 
+=======
+`;
+>>>>>>> a89cb47486bec4bb0e07d516e86338075fb8790a

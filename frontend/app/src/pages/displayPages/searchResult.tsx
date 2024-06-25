@@ -3,7 +3,8 @@ import List from "../../components/list";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import bookServices from "../../services/book-services";
-
+import { useContext } from "react";
+import { CategoryContext } from "../../components/shareContext";
 
 interface bookProp {
     id:number,
@@ -16,29 +17,6 @@ interface bookProp {
     current_page:number
   }
   
-  const testBooks:bookProp[] = [
-    {
-      id: 1,
-      isbn: 9789867412,
-      title: '麥田捕手',
-      author: 'J.D. Salinger',
-      price: 450,
-      category: '文學',
-      edition: 1,
-      current_page: 100
-    },
-    {
-      id: 2,
-      isbn: 9789578626,
-      title: 'R語言生物資訊',
-      author: 'Rstudio Group',
-      price: 320,
-      category: '科學',
-      edition: 2,
-      current_page: 150
-    }
-  ]
-  
   interface IBook{
     id: number
     ISBN: string,
@@ -50,21 +28,32 @@ interface bookProp {
     current_page: number,
   }
 
+const testBooks:bookProp[] = [
+  {
+    id: 0,
+    isbn: 100000000,
+    title: '測試 & test',
+    author: 'robot',
+    price: 0,
+    category: '測試書籍',
+    edition: 0,
+    current_page: 0
+  }
+]
+
 const SearchResult = () => {
   // const [press, setPress] = useState<boolean>(false)
-  const [books, setBooks] = useState<bookProp[]>([
-    {
-      id: 0,
-      isbn: 100000000,
-      title: '測試 & test',
-      author: 'robot',
-      price: 0,
-      category: '測試書籍',
-      edition: 0,
-      current_page: 0
-    }
-  ])
   
+  // shared category: A magical way to share usestate component between two pages
+  const context = useContext(CategoryContext);
+  if (!context) {
+    throw new Error('CategoryContext must be used within a CategoryProvider');
+  } const { category } = context;
+  
+  // books source initialize
+  const [masterSource, setMasterSource] = useState<bookProp[]>(testBooks)
+  const [filteredSource, setFilteredSource] = useState<bookProp[]>(masterSource)
+
   React.useEffect( () => {
     const fetchData = async () => {
       try {
@@ -87,7 +76,7 @@ const SearchResult = () => {
           }
         )
         
-        setBooks(responseBooks)
+        setMasterSource(responseBooks)
       } catch (error) {
         console.error('An error occurred while fetching data:', error )
       }
@@ -95,25 +84,39 @@ const SearchResult = () => {
     fetchData()
   }, [])
 
+  const filterBooks = (value: string | null) => {
+    if(value === null || value === ""  ){
+        setFilteredSource(masterSource);
+    }
+    else {
+      const filtered = masterSource.filter((book) =>
+        //book.title.toLowerCase().includes(value.toLowerCase())
+        book.category === category
+      );  
+      setFilteredSource(filtered);
+    }
+  };
+
+  useEffect( ()=>{
+    filterBooks(category)
+  }, [category] )
 
   return (
-    <div>
-        <ListHeader/>
-        <List
-          // items={testBooks}
-          items={books}
-          renderItem={bookRecord}
-        />
-    </div>
+    <Container>
+      <ListHeader/>
+      <List
+        // items={testBooks}
+        items={filteredSource}
+        renderItem={bookRecord}
+      />
+    </Container>
   );
 };
-
-
 
 const ListHeader = () => {
     return (
       <HeaderContainer>
-        <Index>{ '.' }</Index>
+        {/*<Index>{ '.' }</Index>*/}
         {<BookId >{'id'}</BookId>}
         <BookIsbn>{'ISBN'}</BookIsbn>
         <BookTitle>{'book title'}</BookTitle>
@@ -129,7 +132,7 @@ const ListHeader = () => {
   const bookRecord = (book:bookProp, index:number) => {
     return (
       <ListItem index={index}>
-        <Index>{ index+1 }</Index>
+        {/*<Index>{ index+1 }</Index>*/}
         {<BookId >{book.id}</BookId>}
         <BookIsbn>{book.isbn}</BookIsbn>
         <BookTitle>{book.title}</BookTitle>
@@ -143,83 +146,92 @@ const ListHeader = () => {
     );
   }
   
+const Container = styled.div`
+  width: 720px;
+  background-color: #f4e9d8;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: 'Georgia', serif;
+`;
   
-  
-  const ListItem = styled.div.attrs<{ index: number }>((props) => {
-    return {
-      index: props.index
-    };
-  })`
-    display: flex; 
-    flex-direction: row;
-    padding: 15px 15px; 
-    // margin-top: 5px;
-    // margin-bottom: 5px;
-    height: 20;
-    border-bottom: 1px solid gray;
-    border-width: 3;
-    background-color: ${(props) => props.index%2 ? "white": "lightgrey"};
-    justify-content: space-between;
-    align-items: center;
-  `
-  
-  const HeaderContainer = styled.div`
-    display: flex; 
-    flex-direction: row;
-    padding: 10px 15px; 
-    margin-top: 5px;
-    margin-bottom: 5px;
-    height: 20;
-    border-bottom: 1px solid gray;
-    background-color: wheat;
-    align-items: center;
-    justify-content: space-between;
-  `
-  const listItemCommon = `  
-    margin-left: 1px;
-    margin-right: 1px;
-    //background-color: yellow;
-    padding-inline: 1px;
-    text-align: right;
-  `
-  
-  const Index = styled.text`
-    ${listItemCommon}
-    text-align: left;
-    width: 20px; 
-  `
-  const BookId = styled.text`
-    ${listItemCommon}
-    width: 30px; 
-  `
-  const BookIsbn = styled.text`
-    ${listItemCommon}
-    width: 120px; 
-  `
-  const BookTitle = styled.text`
-    ${listItemCommon}
-    width: 120px; 
-  `
-  const BookAuthor = styled.text`
-    ${listItemCommon}
-    width: 70px; 
-  `
-  const BookPrice = styled.text`
-    ${listItemCommon}
-    width: 50px;
-  `
-  const BookCategory = styled.text`
-    ${listItemCommon}
-    width: 80px;
-  `
-  const BookEdition = styled.text`
-    ${listItemCommon}
-    width: 60px;
-  `
-  const CurrentPage = styled.text`
-    ${listItemCommon}
-    width: 100px;
-  `
+// Books list styling
+const ListItem = styled.div.attrs<{ index: number }>((props) => {
+  return {
+    index: props.index
+  };
+})`
+  display: flex; 
+  flex-direction: row;
+  padding: 15px 15px; 
+  border-bottom: 1px solid #D3B8AE;  // 使用復古色調的邊框
+  background-color: ${(props) => props.index % 2 ? "#f5f5dc" : "#fffaf0"};  // 使用復古色調的背景色
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #FFEFD5;  // 使用復古色調的懸停效果
+  }
+`
+
+const HeaderContainer = styled.div`
+  display: flex; 
+  flex-direction: row;
+  padding: 10px 15px; 
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border-bottom: 2px solid #D3B8AE;
+  background-color: #DEB887;  // 使用復古色調的背景色
+  align-items: center;
+  justify-content: space-between;
+`
+
+const listItemCommon = `  
+  margin-left: 1px;
+  margin-right: 1px;
+  text-align: right;
+  color: #8B4513;  // 使用復古色調的文本顏色
+`
+
+
+const Index = styled.text`
+  ${listItemCommon}
+  text-align: left;
+  width: 20px; 
+`
+const BookId = styled.text`
+  ${listItemCommon}
+  width: 30px; 
+`
+const BookIsbn = styled.text`
+  ${listItemCommon}
+  width: 120px; 
+`
+const BookTitle = styled.text`
+  ${listItemCommon}
+  width: 120px; 
+`
+const BookAuthor = styled.text`
+  ${listItemCommon}
+  width: 70px; 
+`
+const BookPrice = styled.text`
+  ${listItemCommon}
+  width: 50px;
+`
+const BookCategory = styled.text`
+  ${listItemCommon}
+  width: 80px;
+`
+const BookEdition = styled.text`
+  ${listItemCommon}
+  width: 60px;
+`
+const CurrentPage = styled.text`
+  ${listItemCommon}
+  width: 100px;
+`
 
  
 export default SearchResult;

@@ -46,14 +46,55 @@ class BookService {
         edition: edition,
         current_page: current_page
       },
-      //{ headers: { Authorization: `Bearer ${jwt_token}` },}
+      //{ headers: { Authorization: Bearer ${jwt_token} },}
     )
   }
   // 新增刪除書籍的方法
+<<<<<<< HEAD
   async deletebook(bookId: number) {
     return await axios.delete(`${API_URL}/delete_book/${bookId}`);
+=======
+  async deleteBook(
+    bookId: string
+  ) {
+    // 進行 HTTP DELETE 請求來刪除特定書籍
+    return axios.delete(
+      API_URL + `/delete_book/${bookId}`,{
+      })
+>>>>>>> a89cb47486bec4bb0e07d516e86338075fb8790a
+  }
+  async uploadPDF (formData:FormData) {
+    return axios.post(API_URL +'/upload_pdf', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'  //文件上傳
+      }
+    });
+  };
+  async viewPDF(bookId: string): Promise<string> {
+    return API_URL + '/view_pdf/' + bookId;
+  } 
+  async add_note(bookId: string, title: string, content: string) {
+    try {
+      const response = await axios.post(API_URL+'/add_note', {
+        book_id: bookId,
+        title: title,
+        content: content
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error adding note:', error);
+      throw error;
+    }
+  }
+  async viewnote(bookId: number) {
+    const response = await axios.get(`${API_URL}/notes/${bookId}`);
+    return response;
+  }
+  async delete_note(note_id: number) {
+    return await axios.delete(`${API_URL}/delete_note/${note_id}`);
   }
 
+<<<<<<< HEAD
   async uploadPDF (formData:FormData) {
     return axios.post(API_URL +'/upload_pdf', formData, {
       headers: {
@@ -97,6 +138,8 @@ class BookService {
       throw error;
     }
   }
+=======
+>>>>>>> a89cb47486bec4bb0e07d516e86338075fb8790a
   async getBookWithId(book_id:number) {
     return await axios.get(`${API_URL}/search_book/${book_id}`)
   }
