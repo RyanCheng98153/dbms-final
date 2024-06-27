@@ -3,32 +3,29 @@ import styled from "styled-components";
 import { useState, useEffect, useRef } from "react";
 import bookServices from "../../services/book-services";
 import favoriteServices from "../../services/favorite-services";
-import authorServices from "../../services/author-services"
-
+import authorServices from "../../services/author-services";
 
 interface bookProp {
-  id:  number,
-  isbn:  number,
-  title:  string,
-  author:  string,
-  price:  number,
-  category:  string,
-  edition:  number,
-  current_page:  number
-}
-
-
-interface IBook {
-  id: number
-  ISBN: number,
-  book_title: string,
+  id: number,
+  isbn: number,
+  title: string,
   author: string,
   price: number,
   category: string,
   edition: number,
-  current_page: number,
+  current_page: number
 }
 
+interface IBook {
+  id: number
+  ISBN: string,
+  book_title: string,
+  author: string,
+  price: number,
+  category: number,
+  edition: number,
+  current_page: number,
+}
 // 定義 NoteModalProps 介面，用於描述 NoteModal 組件的屬性
 interface NoteModalProps {
   isOpen: boolean; // 控制模態框是否打開
@@ -36,13 +33,10 @@ interface NoteModalProps {
   onSubmit: (title: string, content: string) => void; // 提交筆記時的回調函數
   BookId: number; // 書籍 ID，用於加載和更新筆記
   book_title: string; // 書籍標題，用於顯示在模態框中
-  onSubmit: (title: string, content: string) => void;
-  BookId: number;
-  book_title: string,
 }
 
 // NoteModal 組件，用於顯示和編輯筆記
-const NoteModal: React.FC<NoteModalProps> = ({ isOpen, onClose, onSubmit, BookId, book_title, onSubmit, BookId,book_title }) => {
+const NoteModal: React.FC<NoteModalProps> = ({ isOpen, onClose, onSubmit, BookId, book_title }) => {
   // 狀態定義
   const [noteHTML, setNoteHTML] = useState<string>(''); // 用於存儲從服務器加載的 HTML 字符串
   const [title, setTitle] = useState<string>(''); // 用於存儲用戶輸入的標題
@@ -160,64 +154,6 @@ const NoteModal: React.FC<NoteModalProps> = ({ isOpen, onClose, onSubmit, BookId
   };
 
   // 如果模態框未打開，則返回 null
-  const [noteHTML, setNoteHTML] = useState<string>('');
-  const [title, setTitle] = useState<string>('');
-  const [content, setContent] = useState<string>('');
-  const [cardtitles, setcardTitles] = useState<string[]>([]);
-  const [cardtext, setcardText] = useState<string[]>([]);
-
-  useEffect(() => {
-    if (isOpen) {
-      const fetchNote = async () => {
-        const response = await bookServices.viewnote(BookId);
-        setNoteHTML(response.data); // 設置 HTML 內容
-      };
-
-      fetchNote();
-    }
-  }, [isOpen, BookId]);
-
-  useEffect(() => {
-    if (noteHTML) {
-      // 使用 DOMParser 解析 HTML
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(noteHTML, 'text/html');
-      const cardTitles = Array.from(doc.querySelectorAll('h5.card-title')).map(titleElement => titleElement.textContent || '');
-      const cardText = Array.from(doc.querySelectorAll('p.card-text')).map(textElement => textElement.textContent || '');
-      setcardTitles(cardTitles);
-      setcardText(cardText);
-    }
-  }, [noteHTML]);
-
-  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(e.target.value);
-  };
-
-  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setContent(e.target.value);
-  };
-  const fetchAndSetNoteHTML = async () => {
-    const response = await bookServices.viewnote(BookId);
-    setNoteHTML(response.data);
-  };
-  const handleSubmit = async () => {
-    if(title == "" ){
-      alert("標題不能為空")
-    }
-    else if(content == ""){
-      alert("內容不能為空")
-    }
-    else{
-      await onSubmit(title, content);
-      setTitle('');
-      setContent('');
-      await fetchAndSetNoteHTML(); // 更新 noteHTML，這將觸發 useEffect 更新 cardText
-    }
-  };
-  const handle_delete_note=async (note_id:number) => {
-    await bookServices.delete_note(note_id)
-  }
-
   if (!isOpen) {
     return null;
   }
@@ -228,14 +164,13 @@ const NoteModal: React.FC<NoteModalProps> = ({ isOpen, onClose, onSubmit, BookId
       <Modal>
         <CloseButton onClick={onClose}>&times;</CloseButton>
         <h2 style={{ textAlign: 'left' }}>{book_title}的筆記</h2>
-        <h2 style={{ textAlign: 'left' }}>{book_title}的筆記</h2>
         <div>
-          <Label>新增新增標題:</Label>
-          <Input type="text" value={title} onChange={handleTitleChange} value={title} onChange={handleTitleChange} />
+          <Label>新增標題:</Label>
+          <Input type="text" value={title} onChange={handleTitleChange} />
         </div>
         <div>
-          <Label>新增新增內容:</Label>
-          <Textarea value={content} onChange={handleContentChange} value={content} onChange={handleContentChange}></Textarea>
+          <Label>新增內容:</Label>
+          <Textarea value={content} onChange={handleContentChange}></Textarea>
         </div>
         <Button onClick={handleSubmit}>新增筆記</Button>
         {cardTitles.slice().reverse().map((title, index) => (
@@ -278,12 +213,7 @@ interface NOTE_displayProps {
 }
 
 // NOTE_display 組件，用於顯示書籍的筆記按鈕，並打開筆記模態框
-interface NOTE_displayProps {
-  bookId: string;
-  booktitle: string;
-}
-
-const NOTE_display: React.FC<NOTE_displayProps><NOTE_displayProps> = ({ bookId, booktitle }{ bookId,booktitle }) => {
+const NOTE_display: React.FC<NOTE_displayProps> = ({ bookId, booktitle }) => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // 控制模態框是否打開
 
   // 打開模態框
@@ -294,24 +224,6 @@ const NOTE_display: React.FC<NOTE_displayProps><NOTE_displayProps> = ({ bookId, 
   // 關閉模態框
   const handleCloseModal = () => {
     setIsModalOpen(false);
-  };
-
-  const handleSubmitNote = async (title: string, content: string) => {
-    try {
-      await bookServices.add_note(bookId, title, content);
-    } catch (error) {
-      console.error('Error adding note:', error);
-      // Handle error (e.g., show error message to user)
-    }
-  };
-
-  const handleSubmitNote = async (title: string, content: string) => {
-    try {
-      await bookServices.add_note(bookId, title, content);
-    } catch (error) {
-      console.error('Error adding note:', error);
-      // Handle error (e.g., show error message to user)
-    }
   };
 
   // 提交新的筆記
@@ -333,9 +245,6 @@ const NOTE_display: React.FC<NOTE_displayProps><NOTE_displayProps> = ({ bookId, 
         onClose={handleCloseModal}
         onSubmit={handleSubmitNote}
         BookId={parseInt(bookId)} // 將書籍 ID 轉換為數字
-        book_title={booktitle}
-        onSubmit={handleSubmitNote}
-        BookId={parseInt(bookId)}
         book_title={booktitle}
       />
     </div>
@@ -431,10 +340,8 @@ const AuthorInfoDialog: React.FC<AuthorInfoDialogProps> = ({ authorInfo, author_
 
 const Books = () => {
 
-
   // 定義一個 React 函數式組件 App
   // 返回組件的 JSX 結構
-
 
 
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -541,10 +448,8 @@ const Books = () => {
           }
         )
 
-
         setBooks(responseBooks)
       } catch (error) {
-        console.error('An error occurred while fetching data:', error)
         console.error('An error occurred while fetching data:', error)
       }
     }
@@ -553,7 +458,6 @@ const Books = () => {
   const ListHeader = () => {
     return (
       <HeaderContainer>
-        {/*<Index>{'.'}</Index>*/}
         {/*<Index>{'.'}</Index>*/}
         {<BookId >{'id'}</BookId>}
         <BookIsbn>{'ISBN'}</BookIsbn>
@@ -570,9 +474,6 @@ const Books = () => {
 
   const bookRecord = (book: bookProp, index: number) => {
 
-
-  const bookRecord = (book: bookProp, index: number) => {
-
     const handleAdd_favorite = async (bookId: number) => {
       try {
         await favoriteServices.add_favorite(bookId);
@@ -584,7 +485,6 @@ const Books = () => {
     return (
       <ListItem index={index}>
         {/*<Index>{index + 1}</Index>*/}
-        {/*<Index>{index + 1}</Index>*/}
         {<BookId >{book.id}</BookId>}
         <BookIsbn>{book.isbn}</BookIsbn>
         <BookTitle>{book.title}</BookTitle>
@@ -595,14 +495,9 @@ const Books = () => {
           (book.edition).toString()[0] == '第'
             ? <BookEdition>{book.edition}</BookEdition>
             : <BookEdition>{'第' + book.edition + '版'}</BookEdition>
-            ? <BookEdition>{book.edition}</BookEdition>
-            : <BookEdition>{'第' + book.edition + '版'}</BookEdition>
         }
         <CurrentPage>{book.current_page}</CurrentPage>
         <Operation>
-          <Favorite_Button onClick={() => handleAdd_favorite(book.id)}>加入最愛</Favorite_Button>
-          <Delete_Button onClick={() => handleDelete(book.id)}>刪除書籍</Delete_Button>
-          <Upload_Button onClick={handleButtonClick}>上傳pdf</Upload_Button>
           <Favorite_Button onClick={() => handleAdd_favorite(book.id)}>加入最愛</Favorite_Button>
           <Delete_Button onClick={() => handleDelete(book.id)}>刪除書籍</Delete_Button>
           <Upload_Button onClick={handleButtonClick}>上傳pdf</Upload_Button>
@@ -613,13 +508,12 @@ const Books = () => {
             style={{ display: 'none' }}
             onChange={(event) => handleUploadPDF(event, book.id)}
           />
-            <Read_Button onClick={() => readpdf(book.id)}>閱讀pdf</Read_Button>
-            <NOTE_display bookId={book.id.toString()} booktitle={book.title} bookId={book.id.toString()} booktitle={book.title} />
+          <Read_Button onClick={() => readpdf(book.id)}>閱讀pdf</Read_Button>
+          <NOTE_display bookId={book.id.toString()} booktitle={book.title} />
         </Operation>
       </ListItem>
     );
   }
-
 
 
   return (
@@ -637,15 +531,7 @@ const Books = () => {
   );
 };
 
-const Container = styled.div`
-  width: 720px;
-  background-color: #f4e9d8;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  font-family: 'Georgia', serif;
-`;
-// Books list styling
+
 const ListItem = styled.div.attrs<{ index: number }>((props) => {
   return {
     index: props.index
@@ -656,15 +542,8 @@ const ListItem = styled.div.attrs<{ index: number }>((props) => {
   padding: 15px 15px; 
   border-bottom: 1px solid #D3B8AE;  // 使用復古色調的邊框
   background-color: ${(props) => props.index % 2 ? "#f5f5dc" : "#fffaf0"};  // 使用復古色調的背景色
-  border-bottom: 1px solid #D3B8AE;  // 使用復古色調的邊框
-  background-color: ${(props) => props.index % 2 ? "#f5f5dc" : "#fffaf0"};  // 使用復古色調的背景色
   justify-content: space-between;
   align-items: center;
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: #FFEFD5;  // 使用復古色調的懸停效果
-  }
   transition: background-color 0.3s;
 
   &:hover {
@@ -680,8 +559,6 @@ const HeaderContainer = styled.div`
   margin-bottom: 5px;
   border-bottom: 2px solid #D3B8AE;
   background-color: #DEB887;  // 使用復古色調的背景色
-  border-bottom: 2px solid #D3B8AE;
-  background-color: #DEB887;  // 使用復古色調的背景色
   align-items: center;
   justify-content: space-between;
 `
@@ -691,79 +568,60 @@ const listItemCommon = `
   margin-right: 1px;
   text-align: right;
   color: #8B4513;  // 使用復古色調的文本顏色
-  color: #8B4513;  // 使用復古色調的文本顏色
 `
-
 const Operation = styled.text`
   ${listItemCommon}
   width: 70px;
 `;
-
 const Index = styled.text`
   ${listItemCommon}
   text-align: left;
   width: 20px; 
 `
-
 const BookId = styled.text`
   ${listItemCommon}
   width: 30px; 
 `
-
 const BookIsbn = styled.text`
   ${listItemCommon}
   width: 120px; 
 `
-
 const BookTitle = styled.text`
   ${listItemCommon}
   width: 120px; 
 `
-
 const BookAuthor = styled.text`
   ${listItemCommon}
   width: 70px; 
 `
-
 const BookPrice = styled.text`
   ${listItemCommon}
   width: 50px;
 `
-
 const BookCategory = styled.text`
   ${listItemCommon}
   width: 80px;
 `
-
 const BookEdition = styled.text`
   ${listItemCommon}
   width: 60px;
 `
-
 const CurrentPage = styled.text`
   ${listItemCommon}
   width: 100px;
 `
 
-// Buttons styling
-const ButtonCommon = `
+const Favorite_Button = styled.button`
   margin-left: 12px;
   margin-bottom: 3px;
   width: 70px;
+  background-color: green;
   color: white;
   border: none;
   cursor: pointer;
-  border-radius: 4px;
-  transition: background-color 0.3s;
-
   &:hover {
-    filter: brightness(0.9);
+    background-color: darkgreen;
   }
-`
-
-const Favorite_Button = styled.button`
-  ${ButtonCommon}
-  background-color: #28a745;
 `;
 
 const Delete_Button = styled.button`
@@ -819,10 +677,10 @@ const Note_Button = styled.button`
 `;
 
 
-// Note Modal styling
+//note css
+
 const Overlay = styled.div`
 text-align: left;
-  text-align: left;
   position: fixed;
   top: 0;
   left: 0;
@@ -836,17 +694,15 @@ text-align: left;
 `;
 
 const Modal = styled.div`
-  background-color-color: white;
+  background-color: white;
    background-image: linear-gradient(to bottom, rgba(255, 192, 203, 0.5), rgba(173, 216, 230, 0.5));
-  background-image: linear-gradient(to bottom, rgba(255, 192, 203, 0.5), rgba(173, 216, 230, 0.5));
   padding: 20px;
   border-radius: 10px;
   width: 700px;
   height: 700px;
-  border-radius: 10px;
-  width: 700px;
-  height: 700px;
   max-width: 100%;
+  max-height: 80vh; /* 設定最大高度 */
+  overflow-y: auto; /* 使內容可以垂直滾動 */
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 `;
 
@@ -856,7 +712,7 @@ const CloseButton = styled.span`
   font-size: 24px;
 `;
 
-const Label = styled.label`  
+const Label = styled.label` 
   display: block;
   margin: 10px 0 5px;
 `;
@@ -880,13 +736,12 @@ const Textarea = styled.textarea`
 
 const Button = styled.button`
   background-color: #007BFF;
+   margin: 5px;
   color: white;
   padding: 10px 20px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s;
-
   &:hover {
     background-color: #0056b3;
   }
@@ -1008,28 +863,4 @@ const Author_UpdateButton = styled.button`
     background-color: #0056b3;
   }
 `;
-
-const Card_item = styled.div`
-  background: white;
-  margin: 10px;
-  padding: 10px 20px;  
-  border-radius: 5px;
-  width: 600px;
-  max-width: 100%;
-  max-height: 80vh;
-  overflow-y: auto;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-`;
-
-const CardBody = styled.div`
-  padding: 0;
-  margin: 0;
-  width: 100%;
-`;
-
-
 export default Books;
